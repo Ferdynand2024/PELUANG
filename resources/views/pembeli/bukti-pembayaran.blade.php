@@ -1,3 +1,10 @@
+@extends('layouts.navigasi')
+
+@section('title', 'Bukti Pembayaran — Pelangi')
+@section('page-title', 'Bukti Pembayaran')
+@section('page-subtitle', 'Pembayaran Telah Terselesaikan')
+@section('content')
+
 @php
 // Ambil semua penawaran urut dari terbesar
 $penawarans = $produk->penawaran->sortByDesc('jumlah_penawaran');
@@ -19,11 +26,6 @@ $pemenangUserId = $pemenang->user_id ?? null;
 @endphp
 
 @if(Auth::id() === $pemenangUserId && $pemenang)
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="fw-bold fs-4">Bukti Pembayaran Lelang</h2>
-    </x-slot>
-
     <div class="py-5 bg-light">
         <div class="container">
             <div class="row justify-content-center">
@@ -96,5 +98,6 @@ $pemenangUserId = $pemenang->user_id ?? null;
             </div>
         </div>
     </div>
-</x-app-layout>
 @endif
+
+@endsection

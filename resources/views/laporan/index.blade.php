@@ -1,9 +1,9 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="fw-semibold h4 text-dark">
-            {{ __('Laporan Lelang Selesai') }}
-        </h2>
-    </x-slot>
+@extends('layouts.navigasi')
+
+@section('title', 'Bukti Pembayaran — Pelangi')
+@section('page-title', 'Bukti Pembayaran')
+@section('page-subtitle', 'Pembayaran Telah Terselesaikan')
+@section('content')
 
     <div class="py-4">
         <div class="container">
@@ -106,4 +106,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

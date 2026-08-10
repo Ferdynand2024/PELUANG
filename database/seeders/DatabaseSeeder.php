@@ -49,6 +49,13 @@ class DatabaseSeeder extends Seeder
             'password' => '111111111',
             'role' => 'pembeli'
         ]);
+
+        User::factory()->create([
+            'name' => 'Dinas Perikanan Banyuwangi',
+            'email' => 'DinasBWI@gmail.com',
+            'password' => '111111111',
+            'role' => 'dinas'
+        ]);
         
     }
 }

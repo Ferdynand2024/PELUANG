@@ -63,7 +63,7 @@ class DinasController extends Controller
         $request->validate([
             'name'   => 'required|string|max:255',
             'email'  => ['required', 'email', Rule::unique('users')->ignore($dinas->id)],
-            'phone'  => 'nullable|string|max:20',
+            'phone'  => 'nullable|numeric|max:20',
             'alamat' => 'nullable|string',
         ]);
 

@@ -149,8 +149,10 @@ Route::middleware(['auth', CheckRole::class . ':pembeli'])->group(function () {
 // ── SSE Realtime (semua role yang login) ──────────────────────────
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/api/realtime/attendance-stream', [RealtimeMonitoringController::class, 'stream'])
-        ->name('realtime.attendance-stream');
+    // Ganti nama prefix agar tidak mirip API
+    Route::get('/realtime/stream', [RealtimeMonitoringController::class, 'stream'])
+        ->name('realtime.attendance-stream')
+        ->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class]);
 });
 
 require __DIR__ . '/auth.php';
