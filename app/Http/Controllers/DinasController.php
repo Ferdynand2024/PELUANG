@@ -117,29 +117,33 @@ class DinasController extends Controller
         $user = $request->user();
 
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'phone'    => 'nullable|string|max:20',
-            'alamat'   => 'nullable|string',
-            'password' => 'required|string|min:8|confirmed',
-            'dinas_id' => 'required_if:role,admin|nullable|exists:users,id',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email|unique:users,email',
+            'phone'     => 'nullable|string|max:20',
+            'alamat'    => 'nullable|string',
+            'latitude'  => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'password'  => 'required|string|min:8|confirmed',
+            'dinas_id'  => 'required_if:role,admin|nullable|exists:users,id',
         ]);
 
         // Jika yang membuat adalah dinas, paksa dinas_id = id mereka sendiri
         $dinasId = $user->isDinas() ? $user->id : $request->dinas_id;
 
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'phone'    => $request->phone,
-            'alamat'   => $request->alamat,
-            'role'     => 'tpi',
-            'dinas_id' => $dinasId,
-            'status'   => 1,
-            'password' => Hash::make($request->password),
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'phone'     => $request->phone,
+            'alamat'    => $request->alamat,
+            'latitude'  => $request->latitude,
+            'longitude' => $request->longitude,
+            'role'      => 'tpi',
+            'dinas_id'  => $dinasId,
+            'status'    => 1,
+            'password'  => Hash::make($request->password),
         ]);
 
-        return redirect()->route('tpi.index')   // ← FIXED
+        return redirect()->route('tpi.index')
             ->with('success', 'Akun TPI berhasil dibuat.');
     }
 
@@ -171,13 +175,15 @@ class DinasController extends Controller
         }
 
         $request->validate([
-            'name'   => 'required|string|max:255',
-            'email'  => ['required', 'email', Rule::unique('users')->ignore($tpi->id)],
-            'phone'  => 'nullable|string|max:20',
-            'alamat' => 'nullable|string',
+            'name'      => 'required|string|max:255',
+            'email'     => ['required', 'email', Rule::unique('users')->ignore($tpi->id)],
+            'phone'     => 'nullable|string|max:20',
+            'alamat'    => 'nullable|string',
+            'latitude'  => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
 
-        $data = $request->only(['name', 'email', 'phone', 'alamat']);
+        $data = $request->only(['name', 'email', 'phone', 'alamat', 'latitude', 'longitude']);
 
         // Hanya admin yang bisa pindah TPI ke dinas lain
         if ($user->isAdmin() && $request->filled('dinas_id')) {

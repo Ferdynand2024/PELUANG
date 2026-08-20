@@ -24,6 +24,9 @@ Route::get('/', [ProdukController::class, 'landing'])->name('landingpage');
 Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/faq',   fn() => view('faq'))->name('faq');
 
+Route::get('/tpi/cari-terdekat', [TpiController::class, 'cariTerdekat'])->name('tpi.cari-terdekat');
+Route::get('/api/tpi/terdekat',  [TpiController::class, 'getTerdekatJson'])->name('tpi.terdekat-json');
+
 Route::get('/contact',  [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 

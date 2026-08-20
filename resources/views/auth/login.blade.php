@@ -1,7 +1,7 @@
 @extends('layouts.landing')
 
-@section('title', 'Login - Pelelangan Ikan Banyuwangi')
-@section('description', 'Masuk ke akun Pelangi - Pusat Pelelangan Ikan Banyuwangi')
+@section('title', 'Login - Pelelangan Ikan Terpadu Cemerlang')
+@section('description', 'Masuk ke akun Peluang - Pelelangan Ikan Terpadu Cemerlang')
 
 @push('styles')
 <style>
@@ -319,7 +319,7 @@
                 <div class="col-lg-5 d-none d-lg-flex">
                     <div class="auth-side">
                         
-                        <h2>Selamat Datang Kembali di Pelangi</h2>
+                        <h2>Selamat Datang Kembali di Peluang</h2>
                         <p>
                             Masuk untuk mengakses lelang ikan terbaru, memantau penawaran,
                             dan bertransaksi langsung dengan nelayan terpercaya di Banyuwangi.

@@ -58,6 +58,27 @@
                             @enderror
                         </div>
 
+                        <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="latitude" class="block text-gray-700 text-sm font-bold mb-2">{{ __('Latitude') }}</label>
+                                <input type="text" name="latitude" id="latitude" value="{{ old('latitude', $user->latitude) }}"
+                                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                       placeholder="-8.2192">
+                                @error('latitude')
+                                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="longitude" class="block text-gray-700 text-sm font-bold mb-2">{{ __('Longitude') }}</label>
+                                <input type="text" name="longitude" id="longitude" value="{{ old('longitude', $user->longitude) }}"
+                                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                       placeholder="114.3692">
+                                @error('longitude')
+                                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="mb-4">
                             <label for="password" class="block text-gray-700 text-sm font-bold mb-2">{{ __('Password') }}</label>
                             <input type="password" name="password" id="password"

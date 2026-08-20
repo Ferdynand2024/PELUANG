@@ -1,6 +1,6 @@
 @extends('layouts.navigasi')
 
-@section('title', 'Dashboard — Pelangi')
+@section('title', 'Dashboard — Peluang')
 @section('page-title', 'Dashboard')
 @section('page-subtitle')Selamat datang kembali, {{ auth()->user()->name }}!@endsection
 

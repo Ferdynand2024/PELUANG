@@ -1,7 +1,7 @@
 @extends('layouts.landing')
 
-@section('title', 'Contact - Pelelangan Ikan Banyuwangi')
-@section('description', 'Hubungi Pusat Pelelangan Ikan Banyuwangi (PELANGI) - Terhubung dengan tim kami untuk pertanyaan dan dukungan.')
+@section('title', 'Contact - Pelelangan Ikan Terpadu Cemerlang')
+@section('description', 'Hubungi Pusat Pelelangan Ikan Terpadu Cemerlang (PELUANG) - Terhubung dengan tim kami untuk pertanyaan dan dukungan.')
 
 @push('styles')
 <style>
