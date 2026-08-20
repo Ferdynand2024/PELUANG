@@ -69,7 +69,51 @@ class PembayaranController extends Controller
 
     public function chargePembayaran(Request $request, $id)
     {
-        // Simpan data pembayaran dari Midtrans webhook/callback jika diperlukan
+        // Tangani notifikasi / callback dari Midtrans
+        $notif = $request->all();
+
+        // Validasi signature dari Midtrans agar tidak bisa dipalsukan
+        $serverKey       = config('midtrans.server_key');
+        $orderId         = $notif['order_id'] ?? null;
+        $statusCode      = $notif['status_code'] ?? null;
+        $grossAmount     = $notif['gross_amount'] ?? null;
+        $signatureKey    = $notif['signature_key'] ?? null;
+
+        if ($orderId && $statusCode && $grossAmount && $serverKey) {
+            $expectedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
+            if ($signatureKey && $signatureKey !== $expectedSignature) {
+                return response()->json(['message' => 'Invalid signature.'], 403);
+            }
+        }
+
+        $transactionStatus = $notif['transaction_status'] ?? null;
+        $fraudStatus       = $notif['fraud_status'] ?? null;
+
+        // Tentukan status berdasarkan respon Midtrans
+        if ($transactionStatus === 'capture') {
+            $status = ($fraudStatus === 'accept') ? 'success' : 'failure';
+        } elseif (in_array($transactionStatus, ['settlement', 'pending'])) {
+            $status = $transactionStatus;
+        } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
+            $status = 'failure';
+        } else {
+            $status = $transactionStatus ?? 'unknown';
+        }
+
+        // Tandai pemenang sudah bayar jika pembayaran berhasil
+        if (in_array($status, ['success', 'settlement'])) {
+            $produk   = Produk::with('penawaran')->findOrFail($id);
+            $pemenang = $produk->penawaran
+                ->sortByDesc('jumlah_penawaran')
+                ->firstWhere('status', 'belum');
+
+            if ($pemenang) {
+                $pemenang->status = 'sudah';
+                $pemenang->save();
+            }
+        }
+
+        return response()->json(['message' => 'OK']);
     }
 
     public function buktiPembayaran($id)
@@ -96,7 +140,7 @@ class PembayaranController extends Controller
         }
 
         $user = $pemenang->user;
-        $tpi = User::where('role', 'tpi')->first();
+        $tpi  = $produk->tpi;  // Ambil TPI pemilik produk ini, bukan TPI pertama yang ditemukan
         $orderId = 'lelang-' . $produk->id . '-' . $pemenang->id;
         $tanggalPembayaran = $pemenang->updated_at ?? $pemenang->created_at;
 
@@ -130,7 +174,7 @@ class PembayaranController extends Controller
         }
 
         $user = $pemenang->user;
-        $tpi = User::where('role', 'tpi')->first();
+        $tpi  = $produk->tpi;  // Ambil TPI pemilik produk ini, bukan TPI pertama yang ditemukan
         $orderId = 'lelang-' . $produk->id . '-' . $pemenang->id;
         $tanggalPembayaran = $pemenang->updated_at ?? $pemenang->created_at;
 
@@ -158,7 +202,8 @@ class PembayaranController extends Controller
         }
 
         if (now()->greaterThan($batasWaktuPembayaran)) {
-            return redirect()->route('produk.index')->with('error', 'Waktu pembayaran telah habis.');
+            // Pembeli tidak punya akses ke produk.index (itu route TPI), redirect ke lelang.index
+            return redirect()->route('lelang.index')->with('error', 'Waktu pembayaran telah habis.');
         }
 
         $pemenang->status = 'sudah';

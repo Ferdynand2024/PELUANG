@@ -22,6 +22,7 @@ class Jadwal extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'tpi_id',
         'nama_barang',
         'tanggal_lelang',
         'waktu_mulai',
