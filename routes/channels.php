@@ -8,3 +8,7 @@ Broadcast::channel('produk.{produkId}', function ($user, $produkId) {
     // (data lelang memang publik untuk user login — admin/dinas/tpi/pembeli)
     return in_array($user->role, ['admin', 'dinas', 'tpi', 'pembeli']);
 });
+
+Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
