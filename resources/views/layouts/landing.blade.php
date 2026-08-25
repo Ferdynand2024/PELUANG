@@ -4,14 +4,16 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>@yield('title', 'Pelangi - Pelelangan Ikan Banyuwangi')</title>
+    <title>@yield('title', 'Pelangi - Pelelangan Ikan Terpadu Cemerlang')</title>
     <meta name="description" content="@yield('description', '')">
     <meta name="keywords" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicons -->
     <link href="{{ asset('assets/img/logo.jpg') }}" rel="icon">
-    <link href="{{ asset('assets/img/logo.jpg') }}" rel="apple-touch-icon">
+
+    <!-- PWA Manifest, theme-color, apple-touch-icon (auto dari package silviolleite/laravelpwa) -->
+    @laravelPWA
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -37,7 +39,7 @@
         <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
             <a href="{{ route('landingpage') }}" class="logo d-flex align-items-center">
-                <h1 class="sitename">Pelangi</h1>
+                <h1 class="sitename">Peluang</h1>
             </a>
 
             <nav id="navmenu" class="navmenu">
@@ -46,6 +48,7 @@
                     <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a></li>
                     <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">About</a></li>
                     <li><a href="{{ route('faq') }}" class="{{ request()->routeIs('faq') ? 'active' : '' }}">FAQ</a></li>
+                    <li><a href="{{ route('tpi.cari-terdekat') }}" class="{{ request()->routeIs('tpi.cari-terdekat') ? 'active' : '' }}">Cari TPI</a></li>
                     <a></a>
                     <li><a href="{{ route('register') }}" class="btn-nav btn-nav-outline {{ request()->routeIs('register') ? 'active' : '' }}">Daftar</a></li>
                     <a></a>
@@ -136,7 +139,7 @@
             </div>
 
             <div class="copyright text-center">
-                <p>&copy; {{ date('Y') }} <strong>Pelangi</strong>. Pusat Pelelangan Ikan Banyuwangi. Semua hak dilindungi.</p>
+                <p>&copy; {{ date('Y') }} <strong>Pelangi</strong>. Pusat Pelelangan Ikan Terpadu Cemerlang. Semua hak dilindungi.</p>
             </div>
         </div>
     </footer>
@@ -161,6 +164,7 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     @stack('scripts')
+
 </body>
 
 </html>

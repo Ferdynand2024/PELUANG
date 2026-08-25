@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'FAQ - Pelelangan Ikan Banyuwangi')
+@section('title', 'FAQ - Pelelangan Ikan Terpadu Cemerlang')
 
 @push('styles')
 <style>
@@ -349,7 +349,7 @@
                         <div id="faqCollapse1" class="accordion-collapse collapse show"
                             aria-labelledby="faqHeading1" data-bs-parent="#accordionFaq">
                             <div class="accordion-body">
-                                PELANGI adalah singkatan dari <strong>Pelelangan Ikan Banyuwangi</strong>,
+                                PELANGI adalah singkatan dari <strong>Pelelangan Ikan Terpadu Cemerlang</strong>,
                                 sebuah platform online yang menghubungkan nelayan, penjual ikan, dan pembeli
                                 dalam satu sistem pelelangan ikan digital yang terpercaya di wilayah Banyuwangi.
                             </div>

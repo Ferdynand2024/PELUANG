@@ -761,7 +761,7 @@
 
     <div class="footer-bottom">
         <div class="footer-bottom-inner">
-            <p>© {{ date('Y') }} <strong>Pelangi</strong>. Pusat Pelelangan Ikan Banyuwangi. Semua hak dilindungi.</p>
+            <p>© {{ date('Y') }} <strong>Pelangi</strong>. Pusat Pelelangan Ikan Terpadu Cemerlang. Semua hak dilindungi.</p>
             <div class="footer-bottom-links">
                 <a href="#">Syarat & Ketentuan</a>
                 <a href="#">Kebijakan Privasi</a>

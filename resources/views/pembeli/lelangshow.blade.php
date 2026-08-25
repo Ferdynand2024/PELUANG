@@ -410,4 +410,33 @@
             overflow-y: auto;
         }
     </style>
+
+    <script type="module">
+        window.Echo.channel('produk.{{ $produk->id }}')
+            .listen('.penawaran.baru', (e) => {
+                // 1. Update harga saat ini
+                document.getElementById('harga-sekarang').textContent = e.jumlah_format;
+
+                // 2. Tambahkan ke riwayat penawaran (paling atas)
+                const list = document.getElementById('riwayat-penawaran');
+                const kosong = list.querySelector('li.text-center');
+                if (kosong) kosong.remove();
+
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center flex-wrap';
+                const isSaya = e.user_id === {{ Auth::id() }};
+                li.innerHTML = `
+                    <div>
+                        ${e.jumlah_format}<br>
+                        <small class="text-muted">baru saja</small>
+                    </div>
+                    <span class="badge ${isSaya ? 'bg-success' : 'bg-primary'} ms-auto mt-2 mt-lg-0">
+                        ${e.user_name}
+                    </span>
+                `;
+                list.prepend(li);
+
+                // Opsional: beri notifikasi ringan kalau ada yg menawar lebih tinggi dari kita
+            });
+    </script>
 @endsection

@@ -10,11 +10,13 @@
     <meta name="user-email" content="{{ auth()->user()->email }}">
     @endauth
 
-    <title>{{ isset($title) ? $title . ' / ' . config('app.name', 'Pelelangan Ikan Banyuwangi') : config('app.name', 'Pelelangan Ikan Banyuwangi') }}</title>
+    <title>{{ isset($title) ? $title . ' / ' . config('app.name', 'Pelelangan Ikan Terpadu Cemerlang') : config('app.name', 'Pelelangan Ikan Terpadu Cemerlang') }}</title>
 
-    <!-- Favicons -->
+    <!-- Favicon custom (logo asli Peluang) -->
     <link rel="icon" href="{{ asset('assets/img/logo.jpg') }}" type="image/png">
-    <link rel="apple-touch-icon" href="{{ asset('assets/img/logo.jpg') }}">
+
+    <!-- PWA Manifest, theme-color, apple-touch-icon (auto dari package silviolleite/laravelpwa) -->
+    @laravelPWA
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -161,7 +163,7 @@
         // ── Start monitoring ──────────────────────────────────────────
         function startMonitoring() {
             const isProtected = document.body.classList.contains('protected-page');
-            const isVideo     = document.body.classList.contains('video-render');
+            const isVideo    = document.body.classList.contains('video-render');
 
             if (isProtected && !isVideo) {
                 monitor.start();

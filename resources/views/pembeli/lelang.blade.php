@@ -1,6 +1,6 @@
 @extends('layouts.navigasi')
 
-@section('title', 'Halaman Lelang — Pelangi')
+@section('title', 'Halaman Lelang — PELUANG')
 @section('page-title', 'Halaman Lelang')
 @section('page-subtitle', 'Lelang ikan yang sedang berlangsung saat ini')
 

@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'Home - Pelelangan Ikan Banyuwangi')
+@section('title', 'Home - Pelelangan Ikan Terpadu Cemerlang')
 
 @push('styles')
 <style>
@@ -445,12 +445,12 @@
                 </div>
             </div>
             <div class="col-lg-4 order-lg-1">
-                <span class="section-subtitle" data-aos="fade-up">Selamat datang di Pelangi</span>
+                <span class="section-subtitle" data-aos="fade-up">Selamat datang di Peluang</span>
                 <h1 class="mb-4" data-aos="fade-up">
-                    Pusat Pelelangan ikan Banyuwangi
+                    Pusat Pelelangan Ikan Terpadu Cemerlang
                 </h1>
                 <p data-aos="fade-up">
-                    Pusat pelelangan ikan Banyuwangi, gerbang utama menuju
+                    Pusat Pelelangan Ikan Terpadu Cemerlang, gerbang utama menuju
                     kelimpahan hasil laut dari perairan Banyuwangi yang kaya, tempat transaksi cepat
                     dan transparan mempertemukan nelayan dan pembeli, menghadirkan ikan segar berkualitas
                     tinggi dengan harga bersaing, langsung dari nelayan terpercaya, baik secara langsung
@@ -560,7 +560,7 @@
 <section id="how-it-works" class="how-it-works">
     <div class="container section-title" data-aos="fade-up">
         <h2>Alur Lelang</h2>
-        <p>Ikuti langkah mudah berikut untuk mulai bertransaksi di Pelangi</p>
+        <p>Ikuti langkah mudah berikut untuk mulai bertransaksi di Peluang</p>
     </div>
 
     <div class="container">

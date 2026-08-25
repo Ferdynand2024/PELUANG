@@ -1,7 +1,7 @@
 @extends('layouts.landing')
 
-@section('title', 'About - Pelelangan Ikan Banyuwangi')
-@section('description', 'Tentang Pusat Pelelangan Ikan Banyuwangi (PELANGI) - Kerjasama dengan TPI Muncar dan Dinas Perikanan')
+@section('title', 'About - Pelelangan Ikan Terpadu Cemerlang')
+@section('description', 'Tentang Pusat Pelelangan Ikan Terpadu Cemerlang (PELUANG) - Kerjasama dengan TPI Muncar dan Dinas Perikanan')
 @push('styles')
 <style>
     :root {
@@ -378,7 +378,7 @@
     <!-- Page Title -->
     <div class="page-title light-background">
         <div class="container">
-            <h1>About Pelangi</h1>
+            <h1>About PELUANG</h1>
             <nav class="breadcrumbs">
                 <ol>
                     <li><a href="{{ route('landingpage') }}">Home</a></li>
@@ -407,7 +407,7 @@
                                 Menghubungkan Nelayan dan Pembeli dengan Teknologi Modern
                             </h2>
                             <p class="lead">
-                                PELANGI (Pelelangan Ikan Banyuwangi) adalah platform digital yang menghubungkan nelayan lokal dengan pembeli secara efisien dan transparan.
+                                PELUANG (Pelelangan Ikan Terpadu Cemerlang) adalah platform digital yang menghubungkan nelayan lokal dengan pembeli secara efisien dan transparan.
                             </p>
                             <p class="mb-4">
                                 Bekerja sama dengan Dinas Perikanan Banyuwangi, kami berkomitmen untuk mendukung perekonomian nelayan lokal dan memastikan keberlanjutan hasil laut Banyuwangi.
@@ -424,7 +424,7 @@
     <section id="services" class="services section">
         <div class="container section-title" data-aos="fade-up">
             <span class="section-subtitle">Keunggulan</span>
-            <h2>Mengapa Memilih Pelangi</h2>
+            <h2>Mengapa Memilih Peluang</h2>
             <p>Tiga nilai utama yang menjadi landasan setiap transaksi di platform kami.</p>
         </div>
         <div class="container">
@@ -479,7 +479,7 @@
                     <span class="section-subtitle">Kerjasama</span>
                     <h2 class="content-title">Kolaborasi untuk Memperkuat Ekonomi Maritim</h2>
                     <p class="lead">
-                        PELANGI adalah hasil kerjasama antara TPI Muncar dan Dinas Perikanan Kabupaten Banyuwangi.
+                        PELUANG adalah hasil kerjasama antara TPI Muncar dan Dinas Perikanan Kabupaten Banyuwangi.
                     </p>
                     <p class="mb-4">
                         Dengan menggabungkan pengalaman TPI dalam pengelolaan lelang tradisional dan pengawasan Dinas Perikanan, kami menghadirkan solusi digital yang memenuhi kebutuhan pasar modern sekaligus menjaga nilai-nilai tradisional.
@@ -508,7 +508,7 @@
         <div class="container section-title" data-aos="fade-up">
             <span class="section-subtitle">Komitmen Kami</span>
             <h2>Program Keberlanjutan</h2>
-            <p>PELANGI berkomitmen mendukung praktik perikanan yang berkelanjutan melalui berbagai program berikut.</p>
+            <p>PELUANG berkomitmen mendukung praktik perikanan yang berkelanjutan melalui berbagai program berikut.</p>
         </div>
         <div class="container">
             <div class="row gy-4 justify-content-center">
@@ -528,7 +528,7 @@
                 </div>
                 <div class="col-lg-10" data-aos="fade-up" data-aos-delay="300">
                     <p class="text-center mt-3 mb-0" style="color: var(--navy-text-muted);">
-                        Dengan menggabungkan teknologi modern dan nilai-nilai keberlanjutan, PELANGI bertujuan menciptakan ekosistem perikanan yang menguntungkan bagi semua pihak dan berkelanjutan untuk generasi mendatang.
+                        Dengan menggabungkan teknologi modern dan nilai-nilai keberlanjutan, PELUANG bertujuan menciptakan ekosistem perikanan yang menguntungkan bagi semua pihak dan berkelanjutan untuk generasi mendatang.
                     </p>
                 </div>
             </div>
@@ -538,7 +538,7 @@
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container" data-aos="fade-up">
-            <h2>Mari Bergabung dengan PELANGI</h2>
+            <h2>Mari Bergabung dengan PELUANG</h2>
             <p>Jadi bagian dari ekosistem pelelangan ikan digital yang transparan dan berkelanjutan.</p>
             <a href="{{ route('register') }}" class="btn-get-started">Daftar Sekarang</a>
         </div>

@@ -1,0 +1,495 @@
+@extends('layouts.landing')
+
+@section('title', 'Cari TPI Terdekat - Pelelangan Ikan Terpadu Cemerlang')
+
+@push('styles')
+<style>
+    :root {
+        --navy-900: #0f1f3d;
+        --navy-800: #0f1f3d;
+        --navy-700: #0f1f3d;
+        --navy-accent: #f4a300;
+        --navy-soft: #eef2f9;
+    }
+
+    body {
+        background-color: var(--navy-soft);
+    }
+
+    #header {
+        background-color: var(--navy-900);
+    }
+
+    #header .sitename {
+        color: #ffffff !important;
+        font-weight: 700;
+    }
+
+    #header .navmenu ul li a {
+        color: #ffffff !important;
+        font-weight: 500 !important;
+        transition: color .2s ease !important;
+    }
+
+    #header .navmenu ul li a:hover,
+    #header .navmenu ul li a:focus,
+    #header .navmenu ul li a.active {
+        color: var(--navy-accent) !important;
+    }
+
+    #header .mobile-nav-toggle {
+        color: #fff !important;
+    }
+
+    .page-title {
+        background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 100%);
+        padding: 50px 0 40px;
+        margin-bottom: 0;
+    }
+
+    .page-title h1 {
+        color: #fff;
+        font-weight: 800;
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .page-title .breadcrumbs ol {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .page-title .breadcrumbs ol li {
+        color: #c3cde0;
+        font-size: .9rem;
+    }
+
+    .page-title .breadcrumbs ol li a {
+        color: #c3cde0;
+        text-decoration: none;
+    }
+
+    .page-title .breadcrumbs ol li.current {
+        color: #f4a300;
+    }
+
+    .page-title .breadcrumbs ol li + li::before {
+        content: '/';
+        margin-right: 8px;
+        color: #7a90b0;
+    }
+
+    .tpi-search-section {
+        padding: 60px 0;
+    }
+
+    .tpi-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        height: 100%;
+        background: #ffffff;
+    }
+
+    .tpi-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .distance-badge {
+        background-color: rgba(15, 31, 61, 0.08);
+        color: var(--navy-900);
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 6px 14px;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .preset-btn {
+        border: 1px solid #dee2e6;
+        background-color: #f8f9fa;
+        color: #495057;
+        font-size: 0.85rem;
+        border-radius: 20px;
+        padding: 5px 15px;
+        transition: all 0.2s ease;
+    }
+
+    .preset-btn:hover {
+        background-color: var(--navy-900);
+        color: #ffffff;
+        border-color: var(--navy-900);
+    }
+</style>
+@endpush
+
+@section('content')
+
+{{-- Page Title --}}
+<div class="page-title light-background">
+    <div class="container">
+        <h1>Cari TPI Terdekat</h1>
+        <nav class="breadcrumbs">
+            <ol>
+                <li><a href="{{ route('landingpage') }}">Home</a></li>
+                <li class="current">Cari TPI</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+{{-- Main Section --}}
+<section class="tpi-search-section">
+    <div class="container">
+
+        {{-- Hero / Control Box --}}
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm">
+                    <div class="mb-3">
+                        <span class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle" style="width: 64px; height: 64px;">
+                            <i class="bi bi-geo-alt-fill fs-2"></i>
+                        </span>
+                    </div>
+                    <h3 class="fw-bold mb-2">Temukan Tempat Pelelangan Ikan Terdekat</h3>
+                    <p class="text-muted mb-4">
+                        Gunakan lokasi otomatis browser atau masukkan koordinat lokasi Anda untuk menemukan TPI terdekat.
+                    </p>
+
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+                        <button id="btn-location" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm" onclick="getLocation()">
+                            <i class="bi bi-crosshair me-2"></i> Gunakan Lokasi Saya (GPS)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-lg rounded-pill px-4" type="button" data-bs-toggle="collapse" data-bs-target="#manual-location-collapse" aria-expanded="false">
+                            <i class="bi bi-pencil-square me-2"></i> Input Koordinat Manual
+                        </button>
+                    </div>
+
+                    {{-- Manual Input Collapse Section --}}
+                    <div class="collapse mt-3 text-start" id="manual-location-collapse">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-geo me-1"></i> Input Koordinat Manual / Pilih Lokasi</h6>
+
+                            {{-- Quick Presets --}}
+                            <div class="mb-3">
+                                <span class="small text-muted me-2">Preset Lokasi Cepat:</span>
+                                <button type="button" class="preset-btn me-1 mb-1" onclick="setPreset(-8.2192, 114.3692)">Banyuwangi Kota</button>
+                                <button type="button" class="preset-btn me-1 mb-1" onclick="setPreset(-8.4321, 114.3411)">Muncar</button>
+                                <button type="button" class="preset-btn me-1 mb-1" onclick="setPreset(-8.3713, 113.4740)">Puger (Jember)</button>
+                                <button type="button" class="preset-btn me-1 mb-1" onclick="setPreset(-7.7154, 114.2793)">Mimbo (Situbondo)</button>
+                            </div>
+
+                            <form id="form-manual" onsubmit="handleManualSearch(event)">
+                                <div class="row g-2">
+                                    <div class="col-sm-5">
+                                        <label class="form-label small fw-medium mb-1">Latitude</label>
+                                        <input type="text" id="manual-lat" class="form-control form-control-sm" placeholder="Contoh: -8.2192" required>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <label class="form-label small fw-medium mb-1">Longitude</label>
+                                        <input type="text" id="manual-lng" class="form-control form-control-sm" placeholder="Contoh: 114.3692" required>
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary btn-sm w-100 fw-medium">
+                                            Cari
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    {{-- Loading Indicator --}}
+                    <div id="state-loading" class="mt-4 d-none">
+                        <div class="spinner-border text-primary me-2" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <span class="text-muted fw-medium" id="loading-text">Mendeteksi lokasi Anda...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Error State Card --}}
+        <div id="state-error" class="row justify-content-center d-none mb-4">
+            <div class="col-lg-8">
+                <div class="alert alert-warning d-flex align-items-start rounded-4 p-4 shadow-sm" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill fs-3 me-3 text-warning flex-shrink-0 mt-1"></i>
+                    <div>
+                        <h5 class="alert-heading fw-bold mb-1">Gagal Mengambil Lokasi Otomatis Browser</h5>
+                        <p class="mb-2" id="error-message">Terjadi kesalahan saat meminta akses lokasi GPS browser.</p>
+                        <hr class="my-2">
+                        <p class="mb-0 small text-dark">
+                            <strong>Solusi:</strong> Gunakan opsi
+                            <button type="button" class="btn btn-sm btn-link p-0 align-baseline fw-bold text-primary" onclick="openManualCollapse()">Input Koordinat Manual</button>
+                            di atas atau pilih salah satu preset lokasi cepat.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Empty State Card --}}
+        <div id="state-empty" class="row justify-content-center d-none">
+            <div class="col-lg-8 text-center">
+                <div class="bg-white p-5 rounded-4 shadow-sm">
+                    <i class="bi bi-search-heart text-muted display-4 mb-3 d-block"></i>
+                    <h4 class="fw-bold">Tidak Ada TPI Ditemukan</h4>
+                    <p class="text-muted mb-0">
+                        Saat ini belum ada lokasi TPI aktif yang memiliki data koordinat terdaftar di sistem.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {{-- Data State / Results Grid --}}
+        <div id="state-results" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0 text-navy">
+                    <i class="bi bi-list-stars text-primary me-2"></i>Hasil TPI Terdekat
+                </h4>
+                <span class="badge bg-secondary rounded-pill fs-6 px-3 py-2" id="total-results">0 TPI</span>
+            </div>
+
+            <div class="row g-4" id="tpi-list-container">
+                {{-- Dynamic TPI Cards will be rendered here --}}
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@endsection
+
+@push('scripts')
+<script>
+    function openManualCollapse() {
+        const collapseEl = document.getElementById('manual-location-collapse');
+        if (collapseEl && typeof bootstrap !== 'undefined') {
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl);
+            bsCollapse.show();
+        }
+    }
+
+    function setPreset(lat, lng) {
+        document.getElementById('manual-lat').value = lat;
+        document.getElementById('manual-lng').value = lng;
+        openManualCollapse();
+        fetchTpiTerdekat(lat, lng);
+    }
+
+    function handleManualSearch(e) {
+        e.preventDefault();
+        const latVal = document.getElementById('manual-lat').value;
+        const lngVal = document.getElementById('manual-lng').value;
+        const lat = parseFloat(latVal);
+        const lng = parseFloat(lngVal);
+
+        if (isNaN(lat) || isNaN(lng)) {
+            showError('Mohon masukkan angka koordinat latitude (-90 s/d 90) dan longitude (-180 s/d 180) yang valid.');
+            return;
+        }
+
+        fetchTpiTerdekat(lat, lng);
+    }
+
+    /**
+     * FIX: entry point GPS.
+     * - Cek dukungan geolocation & wajib HTTPS terlebih dahulu.
+     * - Delegasikan pengambilan posisi ke requestPosition() yang punya retry/fallback.
+     */
+    function getLocation() {
+        const btnLocation = document.getElementById('btn-location');
+        const stateLoading = document.getElementById('state-loading');
+        const loadingText = document.getElementById('loading-text');
+        const stateError = document.getElementById('state-error');
+        const stateEmpty = document.getElementById('state-empty');
+        const stateResults = document.getElementById('state-results');
+
+        // Reset states
+        stateError.classList.add('d-none');
+        stateEmpty.classList.add('d-none');
+        stateResults.classList.add('d-none');
+
+        if (!navigator.geolocation) {
+            showError('Browser Anda tidak mendukung fitur Geolocation. Silakan gunakan opsi Input Koordinat Manual.');
+            return;
+        }
+
+        // FIX: Geolocation API browser modern wajib HTTPS (kecuali localhost).
+        // Kalau diakses via HTTP, browser bisa menolak/gagal tanpa pesan jelas.
+        if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) {
+            showError('Fitur GPS hanya berfungsi di koneksi HTTPS. Silakan gunakan opsi Input Koordinat Manual di bawah.');
+            return;
+        }
+
+        btnLocation.disabled = true;
+        stateLoading.classList.remove('d-none');
+        loadingText.textContent = 'Mendeteksi lokasi Anda...';
+
+        requestPosition(true); // percobaan pertama: mode akurat (GPS)
+    }
+
+    /**
+     * FIX: fungsi baru untuk retry.
+     * Percobaan 1: enableHighAccuracy true, timeout pendek (8 detik) — biasanya cepat dapat sinyal GPS asli di HP.
+     * Kalau timeout/posisi tidak tersedia, otomatis fallback ke percobaan 2:
+     * enableHighAccuracy false, timeout lebih panjang (20 detik) — pakai WiFi/IP based location,
+     * cocok untuk laptop/desktop tanpa chip GPS.
+     */
+    function requestPosition(tryHighAccuracy) {
+        const btnLocation = document.getElementById('btn-location');
+        const stateLoading = document.getElementById('state-loading');
+        const loadingText = document.getElementById('loading-text');
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                btnLocation.disabled = false;
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                loadingText.textContent = 'Mencari TPI terdekat dari koordinat Anda...';
+                fetchTpiTerdekat(lat, lng);
+            },
+            function(error) {
+                // FIX: kalau percobaan pertama (high accuracy) timeout atau posisi tidak tersedia,
+                // jangan langsung menyerah — coba lagi dengan mode low-accuracy.
+                if (tryHighAccuracy && (error.code === error.TIMEOUT || error.code === error.POSITION_UNAVAILABLE)) {
+                    loadingText.textContent = 'Mencoba metode deteksi lokasi lain...';
+                    requestPosition(false);
+                    return;
+                }
+
+                btnLocation.disabled = false;
+                stateLoading.classList.add('d-none');
+
+                let errorMsg = '';
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMsg = 'Izin akses lokasi ditolak oleh browser Anda. Silakan gunakan opsi Input Koordinat Manual di bawah.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMsg = 'Informasi lokasi perangkat Anda tidak tersedia. Pastikan Location Services aktif di perangkat/OS Anda, atau gunakan Input Koordinat Manual.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMsg = 'Waktu permintaan lokasi telah habis (timeout). Silakan gunakan opsi Input Koordinat Manual di bawah.';
+                        break;
+                    default:
+                        errorMsg = 'Terjadi kesalahan saat meminta akses lokasi. Silakan gunakan opsi Input Koordinat Manual.';
+                        break;
+                }
+                showError(errorMsg);
+            },
+            tryHighAccuracy
+                ? { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+                : { enableHighAccuracy: false, timeout: 20000, maximumAge: 60000 }
+        );
+    }
+
+    function fetchTpiTerdekat(lat, lng) {
+        const btnLocation = document.getElementById('btn-location');
+        const stateLoading = document.getElementById('state-loading');
+        const stateEmpty = document.getElementById('state-empty');
+        const stateResults = document.getElementById('state-results');
+        const stateError = document.getElementById('state-error');
+        const container = document.getElementById('tpi-list-container');
+        const totalBadge = document.getElementById('total-results');
+
+        stateError.classList.add('d-none');
+        stateEmpty.classList.add('d-none');
+        stateLoading.classList.remove('d-none');
+
+        const url = `{{ route('tpi.terdekat-json') }}?latitude=${lat}&longitude=${lng}`;
+
+        fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gagal mengambil data dari server.');
+            }
+            return response.json();
+        })
+        .then(res => {
+            if (btnLocation) btnLocation.disabled = false;
+            stateLoading.classList.add('d-none');
+
+            if (res.status === 'success' && res.data && res.data.length > 0) {
+                container.innerHTML = '';
+                totalBadge.textContent = `${res.data.length} TPI Ditemukan`;
+
+                res.data.forEach(tpi => {
+                    const cardHtml = `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card tpi-card p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="fw-bold mb-0 text-dark">${escapeHtml(tpi.name)}</h5>
+                                    <span class="distance-badge">
+                                        <i class="bi bi-geo text-primary"></i> ${tpi.jarak_km} km
+                                    </span>
+                                </div>
+                                <hr class="my-2 text-muted opacity-25">
+                                <div class="card-body px-0 py-2">
+                                    <p class="text-muted mb-2 small">
+                                        <i class="bi bi-geo-alt me-2 text-primary"></i>
+                                        ${tpi.alamat ? escapeHtml(tpi.alamat) : '<em>Alamat belum diisi</em>'}
+                                    </p>
+                                    <p class="text-muted mb-3 small">
+                                        <i class="bi bi-telephone me-2 text-primary"></i>
+                                        ${tpi.phone ? escapeHtml(tpi.phone) : '<em>Nomor telepon belum diisi</em>'}
+                                    </p>
+                                </div>
+                                <div class="mt-auto pt-2">
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination=${tpi.latitude},${tpi.longitude}"
+                                       target="_blank"
+                                       class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-medium">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i> Rute di Google Maps
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', cardHtml);
+                });
+
+                stateResults.classList.remove('d-none');
+            } else {
+                stateEmpty.classList.remove('d-none');
+            }
+        })
+        .catch(err => {
+            if (btnLocation) btnLocation.disabled = false;
+            stateLoading.classList.add('d-none');
+            showError(err.message || 'Terjadi kesalahan jaringan saat menghubungi server.');
+        });
+    }
+
+    function showError(message) {
+        const stateError = document.getElementById('state-error');
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.textContent = message;
+        stateError.classList.remove('d-none');
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+</script>
+@endpush

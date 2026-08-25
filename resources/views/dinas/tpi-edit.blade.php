@@ -73,6 +73,34 @@
                                 class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">{{ old('alamat', $tpi->alamat) }}</textarea>
                         </div>
 
+                        {{-- Latitude & Longitude --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Latitude
+                                </label>
+                                <input type="text" id="latitude" name="latitude"
+                                    value="{{ old('latitude', $tpi->latitude) }}"
+                                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 @error('latitude') border-red-400 @enderror"
+                                    placeholder="Contoh: -8.2192">
+                                @error('latitude')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Longitude
+                                </label>
+                                <input type="text" id="longitude" name="longitude"
+                                    value="{{ old('longitude', $tpi->longitude) }}"
+                                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 @error('longitude') border-red-400 @enderror"
+                                    placeholder="Contoh: 114.3692">
+                                @error('longitude')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
                         {{-- Pindah Dinas — hanya admin yang bisa --}}
                         @if(Auth::user()->isAdmin())
                             <div class="mb-4">

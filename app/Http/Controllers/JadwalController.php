@@ -78,7 +78,12 @@ class JadwalController extends Controller
             'lokasi' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9 ]+$/u'],
         ]);
 
-        Jadwal::create($request->all());
+        // Gunakan only() untuk menghindari mass-assignment dari field tak diinginkan.
+        // tpi_id diambil dari user yang sedang login.
+        Jadwal::create(array_merge(
+            $request->only(['nama_barang', 'tanggal_lelang', 'waktu_mulai', 'lokasi']),
+            ['tpi_id' => auth()->id()]
+        ));
 
         return redirect()->route('jadwal.index')
             ->with('success', 'Jadwal lelang berhasil ditambahkan.');
@@ -144,7 +149,8 @@ class JadwalController extends Controller
             'lokasi' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9 ]+$/u'],
         ]);
 
-        $jadwal->update($request->all());
+        // Gunakan only() untuk menghindari mass-assignment dari field tak diinginkan.
+        $jadwal->update($request->only(['nama_barang', 'tanggal_lelang', 'waktu_mulai', 'lokasi']));
 
         return redirect()->route('jadwal.index')
             ->with('success', 'Jadwal lelang berhasil diperbarui.');
@@ -162,5 +168,22 @@ class JadwalController extends Controller
 
         return redirect()->route('jadwal.index')
             ->with('success', 'Jadwal lelang berhasil dihapus.');
+    }
+
+    /**
+     * Tampilkan jadwal lelang mendatang untuk pembeli.
+     * Route: GET /jadwallelang
+     */
+    public function index1()
+    {
+        // Hanya tampilkan jadwal yang belum lewat
+        $jadwals = Jadwal::whereRaw(
+            "CONCAT(tanggal_lelang, ' ', waktu_mulai) >= ?",
+            [Carbon::now()->toDateTimeString()]
+        )
+        ->orderByRaw("CONCAT(tanggal_lelang, ' ', waktu_mulai) ASC")
+        ->get();
+
+        return view('jadwal.jadwallelang', compact('jadwals'));
     }
 }

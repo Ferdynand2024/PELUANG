@@ -1,7 +1,7 @@
 @extends('layouts.landing')
 
-@section('title', 'Daftar - Pelelangan Ikan Banyuwangi')
-@section('description', 'Daftar akun Pelangi - Pusat Pelelangan Ikan Banyuwangi')
+@section('title', 'Daftar - Pelelangan Ikan Terpadu Cemerlang')
+@section('description', 'Daftar akun Peluang - Pusat Pelelangan Ikan Terpadu Cemerlang')
 
 @push('styles')
 <style>
@@ -296,7 +296,7 @@
                 <div class="col-lg-5 d-none d-lg-flex">
                     <div class="auth-side">
                         <i class="bi bi-anchor"></i>
-                        <h2>Gabung Bersama Pelangi</h2>
+                        <h2>Gabung Bersama Peluang</h2>
                         <p>
                             Daftarkan diri Anda untuk mulai mengikuti lelang ikan segar
                             langsung dari nelayan Banyuwangi.

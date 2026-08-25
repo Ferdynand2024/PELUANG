@@ -6,6 +6,7 @@ use App\Models\Penawaran;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\PenawaranDibuat;
 
 class PenawaranController extends Controller
 {
@@ -52,6 +53,9 @@ class PenawaranController extends Controller
             }
             $penawaran->save();
         }
+
+        $penawaranTerbaru = $penawarans->first(); // ini penawaran dgn jumlah tertinggi
+        broadcast(new PenawaranDibuat($penawaranTerbaru))->toOthers();
 
         return back()->with('success', 'Penawaran berhasil dikirim!');
     }

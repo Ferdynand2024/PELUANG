@@ -376,6 +376,10 @@ class ProdukController extends Controller
                     $produk->save();
                 }
 
+                // Reload dari DB agar cek status berikutnya tidak terpengaruh
+                // nilai yang baru saja di-set di atas (race condition fix).
+                $pemenang2->refresh();
+
                 if (
                     $pemenang2->status === 'belum'
                     && now()->gt($produk->waktu_gugur_pemenang1->copy()->addMinutes(2))

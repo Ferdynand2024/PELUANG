@@ -31,7 +31,7 @@ class RealtimeMonitoringController extends Controller
 
             $start = time();
 
-            while (time() - $start < 2) {
+            while (time() - $start < 300) {
 
                 if (connection_aborted()) break;
 

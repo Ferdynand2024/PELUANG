@@ -48,6 +48,21 @@
                             <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
                         </div>
 
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <x-input-label for="latitude" :value="__('Latitude')" />
+                                <x-text-input id="latitude" class="block mt-1 w-full" type="text" name="latitude"
+                                    :value="old('latitude')" placeholder="-8.2192" />
+                                <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
+                            </div>
+                            <div>
+                                <x-input-label for="longitude" :value="__('Longitude')" />
+                                <x-text-input id="longitude" class="block mt-1 w-full" type="text" name="longitude"
+                                    :value="old('longitude')" placeholder="114.3692" />
+                                <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
+                            </div>
+                        </div>
+
                         <div class="mt-4">
                             <x-input-label for="password" :value="__('Password')" />
                             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
