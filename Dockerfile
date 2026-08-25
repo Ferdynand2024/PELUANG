@@ -13,7 +13,3 @@ RUN npm install && npm run build
 RUN cp .env.example .env && php artisan key:generate
 EXPOSE 8000
 CMD php artisan config:cache && php artisan migrate --force && php artisan storage:link && php artisan serve --host=0.0.0.0 --port=8000
-
-CMD php artisan reverb:start --host=0.0.0.0 --port=8080 & \
-    php artisan queue:work --tries=3 & \
-    php artisan serve --host=0.0.0.0 --port=8000
