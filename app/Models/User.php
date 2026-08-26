@@ -92,4 +92,12 @@ class User extends Authenticatable //implements MustVerifyEmail
     {
         return $this->hasMany(Penawaran::class);
     }
+        /**
+     * FITUR BARU: relasi ke produk milik TPI ini, dipakai withCount()
+     * di TpiController::getTerdekatJson() untuk hitung lelang aktif.
+     */
+    public function produk()
+    {
+        return $this->hasMany(\App\Models\Produk::class, 'tpi_id');
+    }
 }

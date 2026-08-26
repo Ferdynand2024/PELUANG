@@ -16,6 +16,7 @@ use App\Http\Controllers\FingerprintController;
 use App\Http\Controllers\RealtimeMonitoringController;
 use App\Http\Controllers\DinasController;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\NotifikasiController;
 
 // ── Public routes ─────────────────────────────────────────────────
 
@@ -26,6 +27,12 @@ Route::get('/faq',   fn() => view('faq'))->name('faq');
 
 Route::get('/tpi/cari-terdekat', [TpiController::class, 'cariTerdekat'])->name('tpi.cari-terdekat');
 Route::get('/api/tpi/terdekat',  [TpiController::class, 'getTerdekatJson'])->name('tpi.terdekat-json');
+
+// FIX: route lama manggil LelangController yang nggak ada/nggak di-import
+// (bikin route file error saat di-load). Diganti ke ProdukController yang
+// beneran punya method produkAktifByTpiJson untuk fitur "Lihat Lelang".
+Route::get('/tpi/{tpiId}/produk-aktif-json', [ProdukController::class, 'produkAktifByTpiJson'])
+    ->name('tpi.produk-aktif-json');
 
 Route::get('/contact',  [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
@@ -104,6 +111,9 @@ Route::middleware(['auth', CheckRole::class . ':tpi'])->group(function () {
     // CRUD produk (index, create, store, edit, update, destroy)
     // 'show' dikecualikan karena dipakai ulang untuk pembeli
     Route::resource('produk', ProdukController::class)->except(['show']);
+
+    Route::get('/notifikasi/json', [NotifikasiController::class, 'json'])->name('notifikasi.json');
+    Route::post('/notifikasi/{id}/baca', [NotifikasiController::class, 'markAsRead'])->name('notifikasi.baca');
 
     // Mulai & selesaikan lelang
     Route::post('/lelang/{produk}/mulai',   [ProdukController::class, 'mulai'])->name('lelang.mulai');

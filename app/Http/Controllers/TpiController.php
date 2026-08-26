@@ -109,6 +109,9 @@ class TpiController extends Controller
 
     /**
      * Endpoint JSON pencarian TPI terdekat menggunakan rumus Haversine di query MySQL.
+     * FITUR BARU: setiap TPI juga menyertakan `lelang_aktif_count` — jumlah produk
+     * dengan status_lelang = 'dibuka' milik TPI tersebut, dipakai untuk badge
+     * "Lelang Aktif" dan tombol "Lihat Lelang" di halaman cari-tpi.
      */
     public function getTerdekatJson(Request $request)
     {
@@ -133,6 +136,12 @@ class TpiController extends Controller
             ->where('status', 1)
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
+            // FITUR BARU: hitung produk yang sedang dilelang (status_lelang = dibuka)
+            // per TPI. Relasi 'produk' didefinisikan di model User (hasMany ke Produk,
+            // foreign key tpi_id) — lihat catatan di bawah kalau belum ada.
+            ->withCount(['produk as lelang_aktif_count' => function ($q) {
+                $q->where('status_lelang', 'dibuka');
+            }])
             ->selectRaw("
                 id, name, email, phone, alamat, latitude, longitude, status,
                 (6371 * acos(
@@ -146,14 +155,15 @@ class TpiController extends Controller
             ->get()
             ->map(function ($tpi) {
                 return [
-                    'id'        => $tpi->id,
-                    'name'      => $tpi->name,
-                    'email'     => $tpi->email,
-                    'phone'     => $tpi->phone,
-                    'alamat'    => $tpi->alamat,
-                    'latitude'  => (float) $tpi->latitude,
-                    'longitude' => (float) $tpi->longitude,
-                    'jarak_km'  => round($tpi->jarak, 2),
+                    'id'                 => $tpi->id,
+                    'name'               => $tpi->name,
+                    'email'              => $tpi->email,
+                    'phone'              => $tpi->phone,
+                    'alamat'             => $tpi->alamat,
+                    'latitude'           => (float) $tpi->latitude,
+                    'longitude'          => (float) $tpi->longitude,
+                    'jarak_km'           => round($tpi->jarak, 2),
+                    'lelang_aktif_count' => (int) $tpi->lelang_aktif_count,
                 ];
             });
 

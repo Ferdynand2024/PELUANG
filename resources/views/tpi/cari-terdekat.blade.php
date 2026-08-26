@@ -128,6 +128,65 @@
         color: #ffffff;
         border-color: var(--navy-900);
     }
+
+    /* FITUR BARU: badge status lelang aktif di card TPI */
+    .lelang-badge {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .lelang-badge.is-active {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+
+    .lelang-badge.is-active .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #dc3545;
+        animation: pulse-dot 1.5s infinite;
+    }
+
+    .lelang-badge.is-inactive {
+        background-color: rgba(108, 117, 125, 0.1);
+        color: #6c757d;
+    }
+
+    @keyframes pulse-dot {
+        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5); }
+        70% { box-shadow: 0 0 0 6px rgba(220, 53, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+
+    /* FITUR BARU: styling item produk lelang di dalam modal */
+    .produk-lelang-item {
+        border: 1px solid #eef0f3;
+        border-radius: 12px;
+        padding: 12px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .produk-lelang-item img {
+        width: 64px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 10px;
+        flex-shrink: 0;
+        background-color: #f1f3f5;
+    }
+
+    .produk-lelang-item .harga-current {
+        color: var(--navy-900);
+        font-weight: 800;
+    }
 </style>
 @endpush
 
@@ -266,6 +325,43 @@
 
     </div>
 </section>
+
+{{-- FITUR BARU: Modal untuk menampilkan daftar produk yang sedang dilelang di sebuah TPI --}}
+<div class="modal fade" id="modal-lelang" tabindex="-1" aria-labelledby="modal-lelang-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="modal-lelang-label">
+                    <i class="bi bi-hammer text-primary me-2"></i>Produk Sedang Dilelang
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                {{-- Loading state modal --}}
+                <div id="modal-lelang-loading" class="text-center py-5">
+                    <div class="spinner-border text-primary mb-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mb-0">Memuat daftar produk lelang...</p>
+                </div>
+
+                {{-- Error state modal --}}
+                <div id="modal-lelang-error" class="alert alert-danger d-none mb-0" role="alert"></div>
+
+                {{-- Empty state modal --}}
+                <div id="modal-lelang-empty" class="text-center py-5 d-none">
+                    <i class="bi bi-inbox text-muted display-5 mb-3 d-block"></i>
+                    <p class="text-muted mb-0">Belum ada produk yang sedang dilelang di TPI ini saat ini.</p>
+                </div>
+
+                {{-- List produk lelang --}}
+                <div id="modal-lelang-list" class="d-flex flex-column gap-3 d-none"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -430,14 +526,40 @@
                 totalBadge.textContent = `${res.data.length} TPI Ditemukan`;
 
                 res.data.forEach(tpi => {
+                    // Badge status lelang aktif, dibaca dari field `lelang_aktif_count`
+                    // (dikirim dari TpiController::getTerdekatJson via withCount)
+                    const jumlahLelang = parseInt(tpi.lelang_aktif_count || 0);
+                    const adaLelang = jumlahLelang > 0;
+
+                    const lelangBadgeHtml = adaLelang
+                        ? `<span class="lelang-badge is-active">
+                               <span class="pulse-dot"></span> ${jumlahLelang} Lelang Aktif
+                           </span>`
+                        : `<span class="lelang-badge is-inactive">
+                               <i class="bi bi-moon"></i> Tidak Ada Lelang
+                           </span>`;
+
+                    const tombolLelangHtml = adaLelang
+                        ? `<button type="button"
+                                   class="btn btn-warning btn-sm rounded-pill w-100 fw-medium mt-2"
+                                   onclick="lihatLelang(${tpi.id}, '${escapeHtml(tpi.name).replace(/'/g, "\\'")}')">
+                               <i class="bi bi-hammer me-1"></i> Lihat Lelang
+                           </button>`
+                        : `<button type="button" class="btn btn-outline-secondary btn-sm rounded-pill w-100 fw-medium mt-2" disabled>
+                               <i class="bi bi-hammer me-1"></i> Tidak Ada Lelang
+                           </button>`;
+
                     const cardHtml = `
                         <div class="col-md-6 col-lg-4">
                             <div class="card tpi-card p-4">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h5 class="fw-bold mb-0 text-dark">${escapeHtml(tpi.name)}</h5>
                                     <span class="distance-badge">
                                         <i class="bi bi-geo text-primary"></i> ${tpi.jarak_km} km
                                     </span>
+                                </div>
+                                <div class="mb-2">
+                                    ${lelangBadgeHtml}
                                 </div>
                                 <hr class="my-2 text-muted opacity-25">
                                 <div class="card-body px-0 py-2">
@@ -456,6 +578,7 @@
                                        class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-medium">
                                         <i class="bi bi-box-arrow-up-right me-1"></i> Rute di Google Maps
                                     </a>
+                                    ${tombolLelangHtml}
                                 </div>
                             </div>
                         </div>
@@ -472,6 +595,83 @@
             if (btnLocation) btnLocation.disabled = false;
             stateLoading.classList.add('d-none');
             showError(err.message || 'Terjadi kesalahan jaringan saat menghubungi server.');
+        });
+    }
+
+    /**
+     * FIX: URL diganti dari /tpi/{id}/lelang-aktif-json ke /tpi/{id}/produk-aktif-json
+     * (nama route final di web.php: tpi.produk-aktif-json, controller: ProdukController::produkAktifByTpiJson).
+     * FIX: mapping field disesuaikan dengan response controller yang sebenarnya —
+     * jenis_ikan (bukan nama_produk), berat (bukan satuan), foto (bukan gambar).
+     */
+    function lihatLelang(tpiId, tpiName) {
+        const modalEl = document.getElementById('modal-lelang');
+        const modalLabel = document.getElementById('modal-lelang-label');
+        const loadingEl = document.getElementById('modal-lelang-loading');
+        const errorEl = document.getElementById('modal-lelang-error');
+        const emptyEl = document.getElementById('modal-lelang-empty');
+        const listEl = document.getElementById('modal-lelang-list');
+
+        modalLabel.innerHTML = `<i class="bi bi-hammer text-primary me-2"></i>Lelang Aktif — ${escapeHtml(tpiName)}`;
+
+        // reset semua state modal
+        loadingEl.classList.remove('d-none');
+        errorEl.classList.add('d-none');
+        emptyEl.classList.add('d-none');
+        listEl.classList.add('d-none');
+        listEl.innerHTML = '';
+
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+
+        fetch(`/tpi/${tpiId}/produk-aktif-json`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gagal mengambil data produk lelang dari server.');
+            }
+            return response.json();
+        })
+        .then(res => {
+            loadingEl.classList.add('d-none');
+
+            if (res.status === 'success' && res.data && res.data.length > 0) {
+                res.data.forEach(produk => {
+                    const gambarSrc = produk.foto ? produk.foto : 'https://via.placeholder.com/64?text=Ikan';
+                    const hargaCurrent = produk.harga_current
+                        ? `Rp ${Number(produk.harga_current).toLocaleString('id-ID')}`
+                        : `Rp ${Number(produk.harga_awal).toLocaleString('id-ID')} <span class="text-muted small">(harga awal)</span>`;
+
+                    const itemHtml = `
+                        <div class="produk-lelang-item">
+                            <img src="${gambarSrc}" alt="${escapeHtml(produk.jenis_ikan)}">
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="fw-bold mb-1">${escapeHtml(produk.jenis_ikan)}</h6>
+                                    <span class="badge bg-danger-subtle text-danger fw-medium">Berlangsung</span>
+                                </div>
+                                <p class="mb-1 small text-muted">
+                                    Berat: ${produk.berat} kg${produk.waktu_selesai ? ' &bull; Berakhir: ' + produk.waktu_selesai : ''}
+                                </p>
+                                <p class="mb-0 harga-current">${hargaCurrent}</p>
+                            </div>
+                        </div>
+                    `;
+                    listEl.insertAdjacentHTML('beforeend', itemHtml);
+                });
+                listEl.classList.remove('d-none');
+            } else {
+                emptyEl.classList.remove('d-none');
+            }
+        })
+        .catch(err => {
+            loadingEl.classList.add('d-none');
+            errorEl.textContent = err.message || 'Terjadi kesalahan saat memuat data lelang.';
+            errorEl.classList.remove('d-none');
         });
     }
 
