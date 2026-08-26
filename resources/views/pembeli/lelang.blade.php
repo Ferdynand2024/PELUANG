@@ -4,10 +4,8 @@
 @section('page-title', 'Halaman Lelang')
 @section('page-subtitle', 'Lelang ikan yang sedang berlangsung saat ini')
 
-
 @push('styles')
 <style>
-    /* ── Filter Panel ───────────────────────────── */
     .filter-panel {
         background: #fff;
         border: 1px solid #e2e8f0;
@@ -19,7 +17,7 @@
 
     .filter-row {
         display: grid;
-        grid-template-columns: 1fr 1fr auto;
+        grid-template-columns: 1fr 1fr 1fr auto;
         gap: 1rem;
         align-items: end;
     }
@@ -34,9 +32,7 @@
         letter-spacing: .04em;
     }
 
-    .filter-group .input-wrap {
-        position: relative;
-    }
+    .filter-group .input-wrap { position: relative; }
     .filter-group .input-icon {
         position: absolute;
         left: .75rem;
@@ -67,10 +63,7 @@
         box-shadow: 0 0 0 3px rgba(15,31,61,.08);
     }
 
-    .filter-actions {
-        display: flex;
-        gap: .5rem;
-    }
+    .filter-actions { display: flex; gap: .5rem; }
 
     .btn-search {
         display: inline-flex;
@@ -106,7 +99,27 @@
     .btn-reset:hover { border-color: #94a3b8; color: #1e293b; }
     .btn-reset svg { width: 14px; height: 14px; }
 
-    /* ── Advanced filter toggle ─────────────────── */
+    .btn-lokasi {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .35rem;
+        width: 100%;
+        padding: .6rem .85rem;
+        background: #eef2f9;
+        color: #0f1f3d;
+        border: 1.5px solid #dbe3ef;
+        border-radius: 8px;
+        font-size: .8rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background .15s;
+    }
+    .btn-lokasi:hover { background: #dbe3ef; }
+    .btn-lokasi svg { width: 14px; height: 14px; }
+    .btn-lokasi.loading { opacity: .6; pointer-events: none; }
+
     .filter-toggle-btn {
         display: inline-flex;
         align-items: center;
@@ -140,7 +153,6 @@
         gap: 1rem;
     }
 
-    /* ── Result bar ─────────────────────────────── */
     .result-bar {
         display: flex;
         align-items: center;
@@ -149,17 +161,10 @@
         gap: .5rem;
         margin-bottom: 1.25rem;
     }
-    .result-count {
-        font-size: .875rem;
-        color: #64748b;
-    }
+    .result-count { font-size: .875rem; color: #64748b; }
     .result-count strong { color: #1e293b; }
 
-    .active-filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: .4rem;
-    }
+    .active-filters { display: flex; flex-wrap: wrap; gap: .4rem; }
     .filter-badge {
         display: inline-flex;
         align-items: center;
@@ -173,14 +178,12 @@
         font-weight: 500;
     }
 
-    /* ── Product grid ───────────────────────────── */
     .product-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1.25rem;
     }
 
-    /* ── Product card ───────────────────────────── */
     .fish-card {
         background: #fff;
         border-radius: 12px;
@@ -196,11 +199,7 @@
         box-shadow: 0 6px 20px rgba(0,0,0,.1);
     }
 
-    .fish-card-img {
-        position: relative;
-        height: 200px;
-        overflow: hidden;
-    }
+    .fish-card-img { position: relative; height: 200px; overflow: hidden; }
     .fish-card-img img {
         width: 100%; height: 100%;
         object-fit: cover;
@@ -233,28 +232,33 @@
         animation: pulse 1.4s infinite;
     }
 
-    .fish-card-body {
-        padding: 1rem 1.1rem;
-        flex: 1;
-    }
-    .fish-name {
-        font-size: 1rem;
-        font-weight: 700;
+    .fish-card-distance {
+        position: absolute;
+        top: .65rem; right: .65rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        background: rgba(255,255,255,.9);
         color: #0f1f3d;
-        margin-bottom: .6rem;
+        font-size: .7rem;
+        font-weight: 700;
+        padding: .25rem .6rem;
+        border-radius: 99px;
     }
 
-    .fish-meta {
+    .fish-card-body { padding: 1rem 1.1rem; flex: 1; }
+    .fish-name { font-size: 1rem; font-weight: 700; color: #0f1f3d; margin-bottom: .3rem; }
+    .fish-tpi {
+        font-size: .78rem;
+        color: #94a3b8;
+        margin-bottom: .6rem;
         display: flex;
-        flex-direction: column;
-        gap: .35rem;
-    }
-    .fish-meta-row {
-        display: flex;
-        justify-content: space-between;
         align-items: center;
-        font-size: .82rem;
+        gap: .3rem;
     }
+
+    .fish-meta { display: flex; flex-direction: column; gap: .35rem; }
+    .fish-meta-row { display: flex; justify-content: space-between; align-items: center; font-size: .82rem; }
     .fish-meta-label { color: #64748b; }
     .fish-meta-value { font-weight: 600; color: #1e293b; }
     .fish-meta-value.price { color: #0f1f3d; }
@@ -274,12 +278,7 @@
     .fish-countdown span { font-weight: 600; color: #475569; font-family: 'DM Mono', monospace; }
     .fish-countdown span.ended { color: #ef4444; }
 
-    .fish-desc {
-        margin-top: .55rem;
-        font-size: .8rem;
-        color: #94a3b8;
-        line-height: 1.5;
-    }
+    .fish-desc { margin-top: .55rem; font-size: .8rem; color: #94a3b8; line-height: 1.5; }
 
     .fish-card-footer {
         padding: .85rem 1.1rem;
@@ -311,23 +310,6 @@
     .btn-ikuti:active { transform: scale(.97); }
     .btn-ikuti svg { width: 15px; height: 15px; }
 
-    .btn-selesai {
-        display: inline-flex;
-        align-items: center;
-        padding: .6rem .9rem;
-        background: #fee2e2;
-        color: #991b1b;
-        border: 1px solid #fecaca;
-        border-radius: 8px;
-        font-size: .82rem;
-        font-weight: 600;
-        font-family: inherit;
-        cursor: pointer;
-        transition: background .15s;
-    }
-    .btn-selesai:hover { background: #fecaca; }
-
-    /* ── Empty state ────────────────────────────── */
     .empty-state {
         grid-column: 1 / -1;
         text-align: center;
@@ -341,7 +323,6 @@
     .empty-state p  { font-size: .85rem; color: #94a3b8; }
     .empty-state a  { color: #0f1f3d; font-weight: 600; }
 
-    /* ── Responsive ─────────────────────────────── */
     @media (max-width: 900px) {
         .product-grid    { grid-template-columns: repeat(2, 1fr); }
         .filter-row      { grid-template-columns: 1fr 1fr; }
@@ -358,11 +339,9 @@
 
 @section('content')
 
-{{-- ── Filter Panel ─────────────────────────────────────── --}}
 <form method="GET" action="{{ route('lelang.index') }}" id="filterForm">
     <div class="filter-panel">
 
-        {{-- Row 1: Search + Sort + Buttons --}}
         <div class="filter-row">
 
             <div class="filter-group">
@@ -389,14 +368,27 @@
             </div>
 
             <div class="filter-group">
+                <label>Pilih TPI</label>
+                <select name="tpi_id" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">Semua TPI</option>
+                    @foreach($tpiList as $tpi)
+                        <option value="{{ $tpi->id }}" {{ request('tpi_id') == $tpi->id ? 'selected' : '' }}>
+                            {{ $tpi->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="filter-group">
                 <label>Urutkan</label>
-                <select name="sort" onchange="document.getElementById('filterForm').submit()">
-                    <option value="latest"     {{ request('sort','latest') == 'latest'     ? 'selected' : '' }}>Terbaru</option>
-                    <option value="waktu_asc"  {{ request('sort')          == 'waktu_asc'  ? 'selected' : '' }}>Waktu Selesai Terdekat</option>
-                    <option value="harga_asc"  {{ request('sort')          == 'harga_asc'  ? 'selected' : '' }}>Harga Terendah</option>
-                    <option value="harga_desc" {{ request('sort')          == 'harga_desc' ? 'selected' : '' }}>Harga Tertinggi</option>
-                    <option value="berat_asc"  {{ request('sort')          == 'berat_asc'  ? 'selected' : '' }}>Berat Teringan</option>
-                    <option value="berat_desc" {{ request('sort')          == 'berat_desc' ? 'selected' : '' }}>Berat Terberat</option>
+                <select name="sort" id="sortSelect" onchange="handleSortChange(this.value)">
+                    <option value="latest"          {{ request('sort','latest') == 'latest' ? 'selected' : '' }}>Terbaru</option>
+                    <option value="lokasi_terdekat" {{ request('sort') == 'lokasi_terdekat' ? 'selected' : '' }}>Lokasi Terdekat</option>
+                    <option value="waktu_asc"       {{ request('sort') == 'waktu_asc' ? 'selected' : '' }}>Waktu Selesai Terdekat</option>
+                    <option value="harga_asc"       {{ request('sort') == 'harga_asc' ? 'selected' : '' }}>Harga Terendah</option>
+                    <option value="harga_desc"      {{ request('sort') == 'harga_desc' ? 'selected' : '' }}>Harga Tertinggi</option>
+                    <option value="berat_asc"       {{ request('sort') == 'berat_asc' ? 'selected' : '' }}>Berat Teringan</option>
+                    <option value="berat_desc"      {{ request('sort') == 'berat_desc' ? 'selected' : '' }}>Berat Terberat</option>
                 </select>
             </div>
 
@@ -407,7 +399,7 @@
                     </svg>
                     Cari
                 </button>
-                @if(request()->hasAny(['search','harga_min','harga_max','berat_min','sort']))
+                @if(request()->hasAny(['search','harga_min','harga_max','berat_min','sort','tpi_id']))
                     <a href="{{ route('lelang.index') }}" class="btn-reset" title="Reset filter">
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/>
@@ -417,7 +409,9 @@
             </div>
         </div>
 
-        {{-- Toggle filter lanjutan --}}
+        <input type="hidden" name="lat" id="latInput" value="{{ request('lat') }}">
+        <input type="hidden" name="lng" id="lngInput" value="{{ request('lng') }}">
+
         <button type="button" class="filter-toggle-btn {{ request()->hasAny(['harga_min','harga_max','berat_min']) ? 'open' : '' }}"
                 id="btnFilterLanjutan" onclick="toggleFilter()">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -429,30 +423,23 @@
             </svg>
         </button>
 
-        {{-- Advanced filters --}}
         <div class="filter-advanced {{ request()->hasAny(['harga_min','harga_max','berat_min']) ? 'open' : '' }}"
              id="filterAdvanced">
             <div class="adv-grid">
                 <div class="filter-group">
                     <label>Harga Awal Min (Rp)</label>
-                    <div class="input-wrap">
-                        <input type="number" name="harga_min" placeholder="0" min="0"
-                               value="{{ request('harga_min') }}" style="padding-left:.85rem">
-                    </div>
+                    <input type="number" name="harga_min" placeholder="0" min="0"
+                           value="{{ request('harga_min') }}" style="padding-left:.85rem">
                 </div>
                 <div class="filter-group">
                     <label>Harga Awal Max (Rp)</label>
-                    <div class="input-wrap">
-                        <input type="number" name="harga_max" placeholder="Tidak terbatas" min="0"
-                               value="{{ request('harga_max') }}" style="padding-left:.85rem">
-                    </div>
+                    <input type="number" name="harga_max" placeholder="Tidak terbatas" min="0"
+                           value="{{ request('harga_max') }}" style="padding-left:.85rem">
                 </div>
                 <div class="filter-group">
                     <label>Berat Minimum (kg)</label>
-                    <div class="input-wrap">
-                        <input type="number" name="berat_min" placeholder="0" min="0" step="0.1"
-                               value="{{ request('berat_min') }}" style="padding-left:.85rem">
-                    </div>
+                    <input type="number" name="berat_min" placeholder="0" min="0" step="0.1"
+                           value="{{ request('berat_min') }}" style="padding-left:.85rem">
                 </div>
             </div>
         </div>
@@ -460,13 +447,16 @@
     </div>
 </form>
 
-{{-- ── Result bar ───────────────────────────────────────── --}}
 <div class="result-bar">
     <p class="result-count">
         Menampilkan <strong>{{ $produk->count() }}</strong> produk lelang
         @if(request('search'))untuk "<strong>{{ request('search') }}</strong>"@endif
     </p>
     <div class="active-filters">
+        @if(request('tpi_id'))
+            @php($tpiTerpilih = $tpiList->firstWhere('id', request('tpi_id')))
+            <span class="filter-badge">TPI: {{ $tpiTerpilih->name ?? '-' }}</span>
+        @endif
         @if(request('harga_min'))
             <span class="filter-badge">Harga ≥ Rp{{ number_format(request('harga_min'),0,',','.') }}</span>
         @endif
@@ -476,10 +466,12 @@
         @if(request('berat_min'))
             <span class="filter-badge">Berat ≥ {{ request('berat_min') }} kg</span>
         @endif
+        @if(request('sort') == 'lokasi_terdekat')
+            <span class="filter-badge">📍 Diurutkan berdasarkan jarak</span>
+        @endif
     </div>
 </div>
 
-{{-- ── Product Grid ─────────────────────────────────────── --}}
 <div class="product-grid">
     @forelse($produk as $item)
         <div class="fish-card">
@@ -488,10 +480,22 @@
                 <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://via.placeholder.com/400x250?text=No+Image' }}"
                      alt="{{ $item->jenis_ikan }}">
                 <span class="fish-card-status">BERLANGSUNG</span>
+                @if(isset($item->jarak))
+                    <span class="fish-card-distance">{{ number_format($item->jarak, 1) }} km</span>
+                @endif
             </div>
 
             <div class="fish-card-body">
                 <div class="fish-name">{{ $item->jenis_ikan }}</div>
+                @if($item->tpi)
+                    <div class="fish-tpi">
+                        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/>
+                            <circle cx="12" cy="11" r="3"/>
+                        </svg>
+                        {{ $item->tpi->name }}
+                    </div>
+                @endif
 
                 <div class="fish-meta">
                     <div class="fish-meta-row">
@@ -528,23 +532,13 @@
                     </svg>
                     Ikuti Lelang
                 </a>
-
-                @if(auth()->check() && auth()->user()->isAdmin() && $item->status_lelang == 'dibuka')
-                    <form action="{{ route('lelang.selesai', $item->id) }}" method="POST">
-                        @csrf @method('PUT')
-                        <button type="submit" class="btn-selesai"
-                                onclick="return confirm('Akhiri lelang produk ini?')">
-                            Selesai
-                        </button>
-                    </form>
-                @endif
             </div>
 
         </div>
     @empty
         <div class="empty-state">
             <div class="empty-state-icon">🐟</div>
-            @if(request()->hasAny(['search','harga_min','harga_max','berat_min']))
+            @if(request()->hasAny(['search','harga_min','harga_max','berat_min','tpi_id']))
                 <h3>Tidak ada hasil</h3>
                 <p>Tidak ada produk yang cocok dengan filter. <a href="{{ route('lelang.index') }}">Hapus filter</a></p>
             @else
@@ -559,16 +553,14 @@
 
 @push('scripts')
 <script>
-    // Toggle filter lanjutan
     function toggleFilter() {
-        const panel   = document.getElementById('filterAdvanced');
-        const btn     = document.getElementById('btnFilterLanjutan');
-        const isOpen  = panel.classList.contains('open');
+        const panel  = document.getElementById('filterAdvanced');
+        const btn    = document.getElementById('btnFilterLanjutan');
+        const isOpen = panel.classList.contains('open');
         panel.classList.toggle('open', !isOpen);
         btn.classList.toggle('open', !isOpen);
     }
 
-    // Countdown timer
     function updateCountdown() {
         document.querySelectorAll('[id^="countdown-"]').forEach(el => {
             const diff = parseInt(el.dataset.timestamp) - Date.now();
@@ -592,9 +584,53 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Submit on Enter di search
     document.getElementById('searchInput')?.addEventListener('keydown', e => {
         if (e.key === 'Enter') { e.preventDefault(); document.getElementById('filterForm').submit(); }
+    });
+
+    function handleSortChange(value) {
+        if (value === 'lokasi_terdekat') {
+            requestLocationAndSubmit();
+        } else {
+            document.getElementById('filterForm').submit();
+        }
+    }
+
+    function requestLocationAndSubmit() {
+        const sortSelect = document.getElementById('sortSelect');
+
+        if (!navigator.geolocation) {
+            alert('Browser kamu tidak mendukung layanan lokasi. Silakan pilih urutan lain.');
+            sortSelect.value = 'latest';
+            return;
+        }
+
+        if (location.protocol !== 'https:' && !['localhost','127.0.0.1'].includes(location.hostname)) {
+            alert('Fitur lokasi hanya berfungsi di koneksi HTTPS.');
+            sortSelect.value = 'latest';
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                document.getElementById('latInput').value = pos.coords.latitude;
+                document.getElementById('lngInput').value = pos.coords.longitude;
+                document.getElementById('filterForm').submit();
+            },
+            () => {
+                alert('Gagal mengambil lokasi. Izinkan akses lokasi di browser untuk pakai fitur ini.');
+                sortSelect.value = 'latest';
+            },
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+        );
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const sortSelect = document.getElementById('sortSelect');
+        const lat = document.getElementById('latInput').value;
+        if (sortSelect.value === 'lokasi_terdekat' && !lat) {
+            requestLocationAndSubmit();
+        }
     });
 </script>
 @endpush

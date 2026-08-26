@@ -371,26 +371,52 @@ class ProdukController extends Controller
 
     // ── Pembeli: tampilkan produk lelang aktif ────────────────────
 
-    public function index2(Request $request): View
-    {
-        $query = Produk::where('status_lelang', 'dibuka')->with('tpi');
+   // ── Pembeli: tampilkan produk lelang aktif ────────────────────
 
-        if ($request->filled('search')) {
-            $query->where('jenis_ikan', 'like', '%' . $request->search . '%');
-        }
+public function index2(Request $request): View
+{
+    $query = Produk::where('status_lelang', 'dibuka')->with('tpi');
 
-        if ($request->filled('harga_min')) {
-            $query->where('harga_awal', '>=', $request->harga_min);
-        }
-        if ($request->filled('harga_max')) {
-            $query->where('harga_awal', '<=', $request->harga_max);
-        }
+    if ($request->filled('search')) {
+        $query->where('jenis_ikan', 'like', '%' . $request->search . '%');
+    }
 
-        if ($request->filled('berat_min')) {
-            $query->where('berat', '>=', $request->berat_min);
-        }
+    // FITUR BARU: filter berdasarkan TPI
+    if ($request->filled('tpi_id')) {
+        $query->where('tpi_id', $request->tpi_id);
+    }
 
-        $sort = $request->get('sort', 'latest');
+    if ($request->filled('harga_min')) {
+        $query->where('harga_awal', '>=', $request->harga_min);
+    }
+    if ($request->filled('harga_max')) {
+        $query->where('harga_awal', '<=', $request->harga_max);
+    }
+
+    if ($request->filled('berat_min')) {
+        $query->where('berat', '>=', $request->berat_min);
+    }
+
+    $sort = $request->get('sort', 'latest');
+
+    // FITUR BARU: sort berdasarkan lokasi terdekat (butuh join ke users/TPI)
+    if ($sort === 'lokasi_terdekat' && $request->filled('lat') && $request->filled('lng')) {
+        $lat = (float) $request->lat;
+        $lng = (float) $request->lng;
+
+        $query->join('users', 'produks.tpi_id', '=', 'users.id')
+            ->select('produks.*')
+            ->selectRaw("
+                (6371 * acos(
+                    cos(radians(?)) * cos(radians(users.latitude))
+                    * cos(radians(users.longitude) - radians(?))
+                    + sin(radians(?)) * sin(radians(users.latitude))
+                )) AS jarak
+            ", [$lat, $lng, $lat])
+            ->whereNotNull('users.latitude')
+            ->whereNotNull('users.longitude')
+            ->orderBy('jarak', 'asc');
+    } else {
         match ($sort) {
             'harga_asc'  => $query->orderBy('harga_awal', 'asc'),
             'harga_desc' => $query->orderBy('harga_awal', 'desc'),
@@ -399,16 +425,19 @@ class ProdukController extends Controller
             'waktu_asc'  => $query->orderBy('waktu_selesai', 'asc'),
             default      => $query->latest(),
         };
-
-        $produk = $query->get();
-
-        $jenisIkanList = Produk::where('status_lelang', 'dibuka')
-            ->distinct()
-            ->pluck('jenis_ikan');
-
-        return view('pembeli.lelang', compact('produk', 'jenisIkanList'));
     }
 
+    $produk = $query->get();
+
+    $jenisIkanList = Produk::where('status_lelang', 'dibuka')
+        ->distinct()
+        ->pluck('jenis_ikan');
+
+    // FITUR BARU: daftar TPI untuk dropdown filter
+    $tpiList = User::where('role', 'tpi')->orderBy('name')->get();
+
+    return view('pembeli.lelang', compact('produk', 'jenisIkanList', 'tpiList'));
+}
     public function show(int $id): View
     {
         $produk = Produk::with('tpi')->findOrFail($id);

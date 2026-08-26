@@ -58,5 +58,5 @@ class Produk extends Model
         return $this->hasMany(Pembayaran::class, 'produk_id');
     }
     
-    
+ 
 }
