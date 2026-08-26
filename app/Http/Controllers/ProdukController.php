@@ -18,11 +18,6 @@ class ProdukController extends Controller
 {
     // ── Helper: scope produk milik TPI yang sedang login ─────────
 
-    /**
-     * Kembalikan query Produk yang hanya milik TPI yang login.
-     * Dipakai di semua method TPI agar TPI lain tidak bisa
-     * mengakses / mengubah produk yang bukan miliknya.
-     */
     private function ownedProduk()
     {
         return Produk::where('tpi_id', Auth::id());
@@ -30,26 +25,26 @@ class ProdukController extends Controller
 
     // ── TPI: CRUD Produk ──────────────────────────────────────────
 
-    /**
-     * Daftar produk milik TPI yang login.
-     */
     public function index(): View
     {
         $produk = $this->ownedProduk()->latest()->get();
-        return view('produk.index', compact('produk'));
+
+        // FITUR BARU: notifikasi pembayaran (belum dibaca) ditampilkan sebagai
+        // alert hijau di atas halaman Daftar Produk.
+        $notifikasiPembayaran = Auth::user()
+            ->unreadNotifications()
+            ->where('type', \App\Notifications\PembayaranDiterimaNotification::class)
+            ->latest()
+            ->get();
+
+        return view('produk.index', compact('produk', 'notifikasiPembayaran'));
     }
 
-    /**
-     * Form tambah produk baru.
-     */
     public function create(): View
     {
         return view('produk.create');
     }
 
-    /**
-     * Simpan produk baru — tpi_id otomatis dari Auth::id().
-     */
     public function store(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
@@ -85,18 +80,12 @@ class ProdukController extends Controller
             ->with('success', 'Produk berhasil ditambahkan.');
     }
 
-    /**
-     * Form edit produk — hanya milik TPI yang login.
-     */
     public function edit(int $id): View
     {
         $produk = $this->ownedProduk()->findOrFail($id);
         return view('produk.edit', compact('produk'));
     }
 
-    /**
-     * Update produk — hanya milik TPI yang login.
-     */
     public function update(Request $request, int $id): RedirectResponse
     {
         $produk = $this->ownedProduk()->findOrFail($id);
@@ -134,9 +123,6 @@ class ProdukController extends Controller
             ->with('success', 'Produk berhasil diperbarui.');
     }
 
-    /**
-     * Hapus produk — hanya milik TPI yang login.
-     */
     public function destroy(int $id): RedirectResponse
     {
         $produk = $this->ownedProduk()->findOrFail($id);
@@ -153,9 +139,6 @@ class ProdukController extends Controller
 
     // ── TPI: Manajemen Lelang ─────────────────────────────────────
 
-    /**
-     * Mulai lelang — hanya produk milik TPI yang login.
-     */
     public function mulai(Produk $produk): RedirectResponse
     {
         abort_if($produk->tpi_id !== Auth::id(), 403, 'Akses ditolak.');
@@ -175,9 +158,6 @@ class ProdukController extends Controller
             ->with('success', 'Lelang untuk ' . $produk->jenis_ikan . ' telah dimulai.');
     }
 
-    /**
-     * Selesaikan lelang dan tentukan pemenang — hanya milik TPI yang login.
-     */
     public function selesaiLelang(Produk $produk): RedirectResponse
     {
         abort_if($produk->tpi_id !== Auth::id(), 403, 'Akses ditolak.');
@@ -244,9 +224,6 @@ class ProdukController extends Controller
             ->with('success', 'Lelang ditutup. Pemenang sudah ditentukan.');
     }
 
-    /**
-     * Tampilkan daftar penawaran untuk produk milik TPI yang login.
-     */
     public function showPenawaran(int $id): View
     {
         $produk     = $this->ownedProduk()->findOrFail($id);
@@ -258,9 +235,6 @@ class ProdukController extends Controller
         return view('produk.penawaran', compact('produk', 'penawarans'));
     }
 
-    /**
-     * Tutup lelang yang sudah lewat waktu (dipanggil cron job).
-     */
     public function tutupLelangOtomatis()
     {
         $produks = Produk::where('status_lelang', 'dibuka')
@@ -293,9 +267,6 @@ class ProdukController extends Controller
         ]);
     }
 
-    /**
-     * Kirim notifikasi WhatsApp ke pemenang cadangan via Fonnte.
-     */
     public function kirimNotifCadangan($id)
     {
         $produk = $this->ownedProduk()
@@ -341,8 +312,6 @@ class ProdukController extends Controller
         return back()->with('error', 'Gagal mengirim pesan WhatsApp.');
     }
 
-    // ── Cek pemenang otomatis (dipanggil dari show pembeli) ───────
-
     public function cekPemenang($produk)
     {
         $penawarans = $produk->penawaran()
@@ -376,8 +345,6 @@ class ProdukController extends Controller
                     $produk->save();
                 }
 
-                // Reload dari DB agar cek status berikutnya tidak terpengaruh
-                // nilai yang baru saja di-set di atas (race condition fix).
                 $pemenang2->refresh();
 
                 if (
@@ -404,19 +371,14 @@ class ProdukController extends Controller
 
     // ── Pembeli: tampilkan produk lelang aktif ────────────────────
 
-    /**
-     * Daftar lelang aktif dengan pencarian & filter.
-     */
     public function index2(Request $request): View
     {
         $query = Produk::where('status_lelang', 'dibuka')->with('tpi');
 
-        // Pencarian berdasarkan nama ikan
         if ($request->filled('search')) {
             $query->where('jenis_ikan', 'like', '%' . $request->search . '%');
         }
 
-        // Filter berdasarkan rentang harga awal
         if ($request->filled('harga_min')) {
             $query->where('harga_awal', '>=', $request->harga_min);
         }
@@ -424,12 +386,10 @@ class ProdukController extends Controller
             $query->where('harga_awal', '<=', $request->harga_max);
         }
 
-        // Filter berdasarkan berat minimum
         if ($request->filled('berat_min')) {
             $query->where('berat', '>=', $request->berat_min);
         }
 
-        // Sorting
         $sort = $request->get('sort', 'latest');
         match ($sort) {
             'harga_asc'  => $query->orderBy('harga_awal', 'asc'),
@@ -442,7 +402,6 @@ class ProdukController extends Controller
 
         $produk = $query->get();
 
-        // Daftar jenis ikan aktif untuk autocomplete
         $jenisIkanList = Produk::where('status_lelang', 'dibuka')
             ->distinct()
             ->pluck('jenis_ikan');
@@ -459,11 +418,6 @@ class ProdukController extends Controller
 
     // ── Public: Landing page (search + lelang terbaru) ───────────────
 
-/**
- * Tampilkan landing page.
- * Default: 3 lelang terbaru yang sedang berlangsung.
- * Jika ada keyword 'q', tampilkan hasil pencarian (lelang yg sedang dibuka).
- */
     public function landing(Request $request): View
     {
         $query = Produk::where('status_lelang', 'dibuka')->with('tpi');
@@ -483,4 +437,30 @@ class ProdukController extends Controller
         return view('landingpage', compact('produk', 'searched', 'keyword'));
     }
 
+    // ── Public: Produk lelang aktif milik satu TPI ("Lihat Lelang" di cari-tpi) ─
+
+    public function produkAktifByTpiJson(int $tpiId)
+    {
+        $produk = Produk::where('tpi_id', $tpiId)
+            ->where('status_lelang', 'dibuka')
+            ->withMax('penawaran', 'jumlah_penawaran')
+            ->latest()
+            ->get()
+            ->map(function ($p) {
+                return [
+                    'id'            => $p->id,
+                    'jenis_ikan'    => $p->jenis_ikan,
+                    'berat'         => $p->berat,
+                    'foto'          => $p->foto ? asset('storage/' . $p->foto) : null,
+                    'harga_awal'    => $p->harga_awal,
+                    'harga_current' => $p->penawaran_max_jumlah_penawaran ?? $p->harga_awal,
+                    'waktu_selesai' => optional($p->waktu_selesai)->format('H:i'),
+                ];
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $produk,
+        ]);
+    }
 }

@@ -7,6 +7,7 @@ use Midtrans\Config;
 use Midtrans\Snap;
 use App\Models\User;
 use App\Models\Produk;
+use App\Notifications\PembayaranDiterimaNotification;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Auth;
 
@@ -102,14 +103,29 @@ class PembayaranController extends Controller
 
         // Tandai pemenang sudah bayar jika pembayaran berhasil
         if (in_array($status, ['success', 'settlement'])) {
-            $produk   = Produk::with('penawaran')->findOrFail($id);
+            // FITUR BARU: eager-load 'tpi' & 'penawaran.user' sekalian, dipakai buat notifikasi di bawah
+            $produk   = Produk::with(['penawaran.user', 'tpi'])->findOrFail($id);
             $pemenang = $produk->penawaran
                 ->sortByDesc('jumlah_penawaran')
                 ->firstWhere('status', 'belum');
 
             if ($pemenang) {
+                $statusSebelumnya = $pemenang->status;
+
                 $pemenang->status = 'sudah';
                 $pemenang->save();
+
+                // FITUR BARU: kirim notifikasi ke TPI pemilik produk, hanya kalau status
+                // sebelumnya belum 'sudah' (guard biar tidak dobel kalau chargePembayaran
+                // dan konfirmasiPembayaran sama-sama sempat jalan untuk transaksi yang sama).
+                if ($statusSebelumnya !== 'sudah' && $produk->tpi) {
+                    $produk->tpi->notify(new PembayaranDiterimaNotification(
+                        produkId: $produk->id,
+                        jenisIkan: $produk->jenis_ikan,
+                        pembeliNama: $pemenang->user->name ?? 'Pembeli',
+                        jumlahBayar: $pemenang->jumlah_penawaran,
+                    ));
+                }
             }
         }
 
@@ -187,7 +203,8 @@ class PembayaranController extends Controller
 
     public function konfirmasiPembayaran($id)
     {
-        $produk = Produk::with('penawaran')->findOrFail($id);
+        // FITUR BARU: eager-load 'penawaran.user' & 'tpi', dipakai buat notifikasi di bawah
+        $produk = Produk::with(['penawaran.user', 'tpi'])->findOrFail($id);
         $pemenang = $produk->penawaran->sortByDesc('jumlah_penawaran')->firstWhere('status', 'belum');
 
         if (!$pemenang || $pemenang->user_id !== Auth::id()) {
@@ -206,8 +223,22 @@ class PembayaranController extends Controller
             return redirect()->route('lelang.index')->with('error', 'Waktu pembayaran telah habis.');
         }
 
+        $statusSebelumnya = $pemenang->status;
+
         $pemenang->status = 'sudah';
         $pemenang->save();
+
+        // FITUR BARU: kirim notifikasi ke TPI pemilik produk, hanya kalau status
+        // sebelumnya belum 'sudah' (guard biar tidak dobel kalau webhook Midtrans
+        // di chargePembayaran() sudah lebih dulu menandainya 'sudah').
+        if ($statusSebelumnya !== 'sudah' && $produk->tpi) {
+            $produk->tpi->notify(new PembayaranDiterimaNotification(
+                produkId: $produk->id,
+                jenisIkan: $produk->jenis_ikan,
+                pembeliNama: $pemenang->user->name ?? Auth::user()->name,
+                jumlahBayar: $pemenang->jumlah_penawaran,
+            ));
+        }
 
         return redirect()->route('lelang.bukti-pembayaran', $produk->id)
             ->with('success', 'Pembayaran berhasil dikonfirmasi!');

@@ -186,12 +186,97 @@
         max-height: 90%;
         border-radius: 8px;
     }
+
+    /* ── FITUR BARU: alert notifikasi pembayaran ───────────── */
+    .notif-pembayaran-list {
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+        margin-bottom: 1.25rem;
+    }
+    .alert-pembayaran {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 10px;
+        padding: .9rem 1rem;
+    }
+    .alert-pembayaran-icon {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #16a34a;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .alert-pembayaran-icon svg { width: 18px; height: 18px; }
+    .alert-pembayaran-body { flex: 1; }
+    .alert-pembayaran-body strong {
+        display: block;
+        color: #14532d;
+        font-size: .88rem;
+        margin-bottom: .2rem;
+    }
+    .alert-pembayaran-body p {
+        color: #166534;
+        font-size: .82rem;
+        margin: 0 0 .3rem;
+        line-height: 1.4;
+    }
+    .alert-pembayaran-time {
+        font-size: .72rem;
+        color: #4d7c58;
+    }
+    .alert-pembayaran-dismiss button {
+        background: none;
+        border: none;
+        color: #4d7c58;
+        cursor: pointer;
+        padding: .25rem;
+        border-radius: 6px;
+        transition: background .15s;
+    }
+    .alert-pembayaran-dismiss button:hover { background: rgba(0,0,0,.06); }
+    .alert-pembayaran-dismiss svg { width: 14px; height: 14px; }
 </style>
 @endpush
 
 @section('content')
 
 <div class="produk-panel">
+
+    {{-- FITUR BARU: notifikasi pembayaran diterima --}}
+    @if($notifikasiPembayaran->count() > 0)
+        <div class="notif-pembayaran-list">
+            @foreach($notifikasiPembayaran as $notif)
+                <div class="alert-pembayaran">
+                    <div class="alert-pembayaran-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <div class="alert-pembayaran-body">
+                        <strong>Pembayaran Berhasil</strong>
+                        <p>{{ $notif->data['message'] }}</p>
+                        <span class="alert-pembayaran-time">{{ $notif->created_at->diffForHumans() }}</span>
+                    </div>
+                    <form action="{{ route('notifikasi.baca', $notif->id) }}" method="POST" class="alert-pembayaran-dismiss">
+                        @csrf
+                        <button type="submit" title="Tandai sudah dibaca">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            @endforeach
+        </div>
+    @endif
 
     <div class="produk-toolbar">
         <h3>Semua Produk</h3>

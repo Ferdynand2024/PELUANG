@@ -32,6 +32,7 @@ class Produk extends Model
     ];
 
     // TPI pemilik produk ini
+    
     public function tpi()
     {
         return $this->belongsTo(User::class, 'tpi_id');
@@ -56,4 +57,6 @@ class Produk extends Model
     {
         return $this->hasMany(Pembayaran::class, 'produk_id');
     }
+    
+    
 }
