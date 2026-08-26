@@ -412,7 +412,6 @@
             }
         });
     }
-
     setInterval(updateAdminCountdown, 1000);
     updateAdminCountdown();
 </script>
