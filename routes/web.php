@@ -103,6 +103,17 @@ Route::middleware(['auth', CheckRole::class . ':admin,dinas'])->group(function (
 Route::middleware(['auth', CheckRole::class . ':admin,dinas,tpi'])->group(function () {
     Route::get('/laporan-lelang', [LaporanLelangController::class, 'index'])->name('laporan.lelang');
     Route::get('/laporan/export', [LaporanLelangController::class, 'export'])->name('laporan.export');
+
+    Route::get('/laporan', [LaporanLelangController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/export', [LaporanLelangController::class, 'export'])->name('laporan.export');
+
+    // FITUR 1: Laporan khusus TPI yang sedang login
+    Route::get('/laporan/tpi', [LaporanLelangController::class, 'tpiIndex'])->name('laporan.tpi.index');
+    Route::get('/laporan/tpi/export', [LaporanLelangController::class, 'tpiExport'])->name('laporan.tpi.export');
+
+    // FITUR 2: Laporan Dinas — lintas TPI miliknya
+    Route::get('/laporan/dinas', [LaporanLelangController::class, 'dinasIndex'])->name('laporan.dinas.index');
+    Route::get('/laporan/dinas/export', [LaporanLelangController::class, 'dinasExport'])->name('laporan.dinas.export');
 });
 
 // ── TPI saja: produk & lelang ─────────────────────────────────────

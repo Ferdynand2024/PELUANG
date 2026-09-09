@@ -472,7 +472,7 @@
                     <span>Produk</span>
                 </a>
 
-                <a href="{{ route('laporan.lelang') }}"
+                <a href="{{ route('laporan.tpi.index') }}"
                    class="nav-link {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -493,7 +493,7 @@
                     <span>TPI Saya</span>
                 </a>
 
-                <a href="{{ route('laporan.lelang') }}"
+                <a href="{{ route('laporan.dinas.index') }}"
                    class="nav-link {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -720,11 +720,11 @@
                 @if(auth()->user()->role === 'tpi')
                     <li><a href="{{ route('jadwal.index') }}">Jadwal Lelang</a></li>
                     <li><a href="{{ route('produk.index') }}">Kelola Produk</a></li>
-                    <li><a href="{{ route('laporan.lelang') }}">Laporan</a></li>
+                    <li><a href="{{ route('laporan.tpi.index') }}">Laporan</a></li>
 
                 @elseif(auth()->user()->role === 'dinas')
                     <li><a href="{{ route('tpi.index') }}">TPI Saya</a></li>
-                    <li><a href="{{ route('laporan.lelang') }}">Laporan</a></li>
+                    <li><a href="{{ route('laporan.dinas.index') }}">Laporan</a></li>
 
                 @elseif(auth()->user()->role === 'admin')
                     <li><a href="{{ route('dinas.index') }}">Manajemen Dinas</a></li>

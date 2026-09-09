@@ -1,8 +1,8 @@
 @extends('layouts.navigasi')
 
-@section('title', 'Bukti Pembayaran — Peluang')
-@section('page-title', 'Bukti Pembayaran')
-@section('page-subtitle', 'Pembayaran Telah Terselesaikan')
+@section('title', 'Laporan Pelelangan TPI — Peluang')
+@section('page-title', 'Laporan Pelelangan TPI')
+@section('page-subtitle', 'Laporan pelelangan yang telah dilakukan pembayaran')
 @section('content')
 
     <div class="py-4">

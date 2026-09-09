@@ -1,18 +1,18 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Dinas') }}
-        </h2>
-    </x-slot>
+@extends('layouts.navigasi')
 
-    <div class="py-12">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+@section('title', 'Edit Dinas')
+@section('page-title', 'Edit Dinas')
+@section('page-subtitle', 'Perbarui data dinas yang terdaftar')
+@section('content')
+
+    <div class="py-4">
+        <div class="container">
+            <div class="card shadow-sm">
+                <div class="card-body">
 
                     {{-- Error validasi --}}
                     @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <ul class="mb-0">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -27,84 +27,78 @@
                         @method('PUT')
 
                         {{-- Nama --}}
-                        <div class="mb-4">
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-                                Nama Dinas <span class="text-red-500">*</span>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                Nama Dinas <span class="text-danger">*</span>
                             </label>
                             <input type="text" id="name" name="name"
                                 value="{{ old('name', $dinas->name) }}"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 @error('name') border-red-400 @enderror"
+                                class="form-control @error('name') is-invalid @enderror"
                                 required>
                             @error('name')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         {{-- Email --}}
-                        <div class="mb-4">
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                                Email <span class="text-red-500">*</span>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                Email <span class="text-danger">*</span>
                             </label>
                             <input type="email" id="email" name="email"
                                 value="{{ old('email', $dinas->email) }}"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 @error('email') border-red-400 @enderror"
+                                class="form-control @error('email') is-invalid @enderror"
                                 required>
                             @error('email')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         {{-- Telepon --}}
-                        <div class="mb-4">
-                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
-                                Nomor Telepon
-                            </label>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Nomor Telepon</label>
                             <input type="text" id="phone" name="phone"
                                 value="{{ old('phone', $dinas->phone) }}"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">
+                                class="form-control">
                         </div>
 
                         {{-- Alamat --}}
-                        <div class="mb-4">
-                            <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">
-                                Alamat
-                            </label>
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat</label>
                             <textarea id="alamat" name="alamat" rows="3"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">{{ old('alamat', $dinas->alamat) }}</textarea>
+                                class="form-control">{{ old('alamat', $dinas->alamat) }}</textarea>
                         </div>
 
                         {{-- Password (opsional saat edit) --}}
                         <div class="mb-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="form-label">
                                 Password Baru
-                                <span class="text-gray-400 text-xs font-normal">(kosongkan jika tidak diubah)</span>
+                                <span class="text-muted small fw-normal">(kosongkan jika tidak diubah)</span>
                             </label>
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <input type="password" id="password" name="password"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 @error('password') border-red-400 @enderror"
+                                class="form-control @error('password') is-invalid @enderror"
                                 placeholder="Minimal 8 karakter">
                             @error('password')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-6">
-                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">
+                        <div class="mb-4">
+                            <label for="password_confirmation" class="form-label">
                                 Konfirmasi Password Baru
                             </label>
                             <input type="password" id="password_confirmation" name="password_confirmation"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">
+                                class="form-control">
                         </div>
 
                         {{-- Tombol --}}
-                        <div class="flex items-center gap-3">
-                            <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
-                                Perbarui
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Perbarui
                             </button>
-                            <a href="{{ route('dinas.index') }}"
-                                class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-6 rounded">
+                            <a href="{{ route('dinas.index') }}" class="btn btn-outline-secondary">
                                 Batal
                             </a>
                         </div>
@@ -114,4 +108,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
