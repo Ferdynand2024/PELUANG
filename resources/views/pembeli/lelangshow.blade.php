@@ -17,7 +17,7 @@
 
     $hargaTertinggi = $pemenang1 ? number_format($pemenang1->jumlah_penawaran, 0, ',', '.') : number_format($produk->harga_awal, 0, ',', '.');
     @endphp
-    
+
 @section('content')
 
     <div class="py-12"
@@ -210,10 +210,15 @@
                                 <div class="card-body flex-grow-1 overflow-auto" style="max-height: 400px;">
                                     <ul class="list-group" id="riwayat-penawaran">
                                         @forelse($produk->penawaran->sortByDesc('jumlah_penawaran') as $penawaran)
-                                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
+                                            data-id="{{ $penawaran->id }}">
                                             <div>
                                                 Rp {{ number_format($penawaran->jumlah_penawaran, 0, ',', '.') }}<br>
-                                                <small class="text-muted">{{ $penawaran->created_at->diffForHumans() }}</small>
+                                                {{-- FIX: pakai class + data-timestamp supaya bisa diperbarui otomatis oleh JS --}}
+                                                <small class="text-muted waktu-relatif"
+                                                       data-timestamp="{{ $penawaran->created_at->timestamp * 1000 }}">
+                                                    {{ $penawaran->created_at->diffForHumans() }}
+                                                </small>
                                             </div>
                                             <span class="badge {{ $penawaran->user_id === Auth::id() ? 'bg-success' : 'bg-primary' }} ms-auto mt-2 mt-lg-0">
                                                 {{ $penawaran->user->name }}
@@ -378,6 +383,24 @@
         });
     </script>
 
+    {{-- FIX BUG 2: Auto-reload tepat saat waktu_selesai habis, --}}
+    {{-- supaya Blade menghitung ulang status pemenang & modal ditampilkan tanpa perlu refresh manual --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const waktuSelesaiEl = document.getElementById('waktu-selesai');
+            if (waktuSelesaiEl && waktuSelesaiEl.dataset.timestamp) {
+                const target = parseInt(waktuSelesaiEl.dataset.timestamp);
+                const now = Date.now();
+                if (target && target > now) {
+                    // Reload otomatis 1 detik setelah lelang berakhir
+                    setTimeout(() => {
+                        location.reload();
+                    }, (target - now) + 1000);
+                }
+            }
+        });
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.querySelector('.py-12');
@@ -411,9 +434,32 @@
         }
     </style>
 
+    {{-- FIX BUG 1: gunakan timestamp asli dari event, bukan teks statis "baru saja" --}}
+    <script>
+        function formatWaktuRelatif(ts) {
+            const detik = Math.floor((Date.now() - ts) / 1000);
+            if (detik < 60) return 'baru saja';
+            if (detik < 3600) return Math.floor(detik / 60) + ' menit lalu';
+            if (detik < 86400) return Math.floor(detik / 3600) + ' jam lalu';
+            return Math.floor(detik / 86400) + ' hari lalu';
+        }
+
+        // Perbarui semua label waktu relatif setiap 15 detik
+        setInterval(() => {
+            document.querySelectorAll('.waktu-relatif').forEach(el => {
+                const ts = parseInt(el.dataset.timestamp);
+                if (ts) el.textContent = formatWaktuRelatif(ts);
+            });
+        }, 15000);
+    </script>
+
     <script type="module">
         window.Echo.channel('produk.{{ $produk->id }}')
             .listen('.penawaran.baru', (e) => {
+                // Cegah duplikasi: skip kalau id ini sudah ada di DOM
+                const sudahAda = document.querySelector(`#riwayat-penawaran li[data-id="${e.id}"]`);
+                if (sudahAda) return;
+
                 // 1. Update harga saat ini
                 document.getElementById('harga-sekarang').textContent = e.jumlah_format;
 
@@ -424,19 +470,23 @@
 
                 const li = document.createElement('li');
                 li.className = 'list-group-item d-flex justify-content-between align-items-center flex-wrap';
+                li.dataset.id = e.id; // penanda unik
                 const isSaya = e.user_id === {{ Auth::id() }};
+
+                // FIX: pakai timestamp asli dari payload event (created_at_timestamp)
+                // supaya waktu yang tampil akurat & bisa diperbarui otomatis, bukan "baru saja" statis
+                const timestamp = e.created_at_timestamp || Date.now();
+
                 li.innerHTML = `
                     <div>
                         ${e.jumlah_format}<br>
-                        <small class="text-muted">baru saja</small>
+                        <small class="text-muted waktu-relatif" data-timestamp="${timestamp}">baru saja</small>
                     </div>
                     <span class="badge ${isSaya ? 'bg-success' : 'bg-primary'} ms-auto mt-2 mt-lg-0">
                         ${e.user_name}
                     </span>
                 `;
                 list.prepend(li);
-
-                // Opsional: beri notifikasi ringan kalau ada yg menawar lebih tinggi dari kita
             });
     </script>
 @endsection

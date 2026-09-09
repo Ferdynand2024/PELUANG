@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>@yield('title', 'Pelangi - Pelelangan Ikan Terpadu Cemerlang')</title>
+    <title>@yield('title', 'PELUANG - Pelelangan Ikan Terpadu Cemerlang')</title>
     <meta name="description" content="@yield('description', '')">
     <meta name="keywords" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -72,12 +72,12 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="widget">
                         <a href="{{ route('landingpage') }}" class="logo d-flex align-items-center mb-3">
-                            <h1 class="sitename" style="color:#fff; font-size:24px;">Pelangi</h1>
+                            <h1 class="sitename" style="color:#fff; font-size:24px;">Peluang</h1>
                         </a>
                         <p>
                             Platform pelelangan ikan digital yang menghubungkan nelayan dan pembeli
                             secara cepat, transparan, dan terpercaya, demi mendukung ekonomi lokal
-                            dan keberlanjutan perikanan Banyuwangi.
+                            dan keberlanjutan perikanan Nasional.
                         </p>
                         <ul class="list-unstyled social-icons light mb-0">
                             <li><a href="#"><span class="bi bi-facebook"></span></a></li>
@@ -126,7 +126,7 @@
                             </li>
                             <li class="d-flex mb-2">
                                 <i class="bi bi-envelope me-2"></i>
-                                <span>info@pelangi-banyuwangi.id</span>
+                                <span>info@peluang-banyuwangi.id</span>
                             </li>
                             <li class="d-flex mb-2">
                                 <i class="bi bi-telephone me-2"></i>
@@ -139,7 +139,7 @@
             </div>
 
             <div class="copyright text-center">
-                <p>&copy; {{ date('Y') }} <strong>Pelangi</strong>. Pusat Pelelangan Ikan Terpadu Cemerlang. Semua hak dilindungi.</p>
+                <p>&copy; {{ date('Y') }} <strong>Peluang</strong>. Pusat Pelelangan Ikan Terpadu Cemerlang. Semua hak dilindungi.</p>
             </div>
         </div>
     </footer>

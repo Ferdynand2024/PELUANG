@@ -313,7 +313,7 @@
 {{-- Page Title --}}
 <div class="page-title light-background">
     <div class="container">
-        <h1>FAQ Pelangi</h1>
+        <h1>FAQ Peluang</h1>
         <nav class="breadcrumbs">
             <ol>
                 <li><a href="{{ route('landingpage') }}">Home</a></li>
@@ -327,7 +327,7 @@
 <section id="faq" class="faq-section">
     <div class="container section-title text-center mb-5" data-aos="fade-up">
         <h2>Pertanyaan yang Sering Diajukan</h2>
-        <p>Temukan jawaban atas pertanyaan umum seputar platform PELANGI</p>
+        <p>Temukan jawaban atas pertanyaan umum seputar platform PELUANG</p>
     </div>
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -343,13 +343,13 @@
                                 data-bs-toggle="collapse" data-bs-target="#faqCollapse1"
                                 aria-expanded="true" aria-controls="faqCollapse1">
                                 <span class="faq-number">1</span>
-                                Apa itu PELANGI?
+                                Apa itu PELUANG?
                             </button>
                         </h2>
                         <div id="faqCollapse1" class="accordion-collapse collapse show"
                             aria-labelledby="faqHeading1" data-bs-parent="#accordionFaq">
                             <div class="accordion-body">
-                                PELANGI adalah singkatan dari <strong>Pelelangan Ikan Terpadu Cemerlang</strong>,
+                                PELUANG adalah singkatan dari <strong>Pelelangan Ikan Terpadu Cemerlang</strong>,
                                 sebuah platform online yang menghubungkan nelayan, penjual ikan, dan pembeli
                                 dalam satu sistem pelelangan ikan digital yang terpercaya di wilayah Banyuwangi.
                             </div>
@@ -421,7 +421,7 @@
                                 data-bs-toggle="collapse" data-bs-target="#faqCollapse5"
                                 aria-expanded="false" aria-controls="faqCollapse5">
                                 <span class="faq-number">5</span>
-                                Bagaimana cara mendaftar di PELANGI?
+                                Bagaimana cara mendaftar di PELUANG?
                             </button>
                         </h2>
                         <div id="faqCollapse5" class="accordion-collapse collapse"
@@ -499,13 +499,13 @@
                                 data-bs-toggle="collapse" data-bs-target="#faqCollapse9"
                                 aria-expanded="false" aria-controls="faqCollapse9">
                                 <span class="faq-number">9</span>
-                                Siapa saja yang bisa menggunakan layanan PELANGI?
+                                Siapa saja yang bisa menggunakan layanan PELUANG?
                             </button>
                         </h2>
                         <div id="faqCollapse9" class="accordion-collapse collapse"
                             aria-labelledby="faqHeading9" data-bs-parent="#accordionFaq">
                             <div class="accordion-body">
-                                PELANGI terbuka untuk berbagai pihak, mulai dari <strong>nelayan lokal</strong>,
+                                PELUANG terbuka untuk berbagai pihak, mulai dari <strong>nelayan lokal</strong>,
                                 pengepul ikan, pedagang pasar, pemilik restoran, hingga masyarakat umum yang ingin
                                 membeli hasil laut segar dengan harga yang transparan.
                             </div>
@@ -519,13 +519,13 @@
                                 data-bs-toggle="collapse" data-bs-target="#faqCollapse10"
                                 aria-expanded="false" aria-controls="faqCollapse10">
                                 <span class="faq-number">10</span>
-                                Apakah PELANGI sudah tersedia dalam versi aplikasi mobile?
+                                Apakah PELUANG sudah tersedia dalam versi aplikasi mobile?
                             </button>
                         </h2>
                         <div id="faqCollapse10" class="accordion-collapse collapse"
                             aria-labelledby="faqHeading10" data-bs-parent="#accordionFaq">
                             <div class="accordion-body">
-                                Saat ini PELANGI tersedia dalam <strong>versi website</strong> yang responsif dan
+                                Saat ini PELUANG tersedia dalam <strong>versi website</strong> yang responsif dan
                                 dapat diakses dengan nyaman melalui browser mobile. Versi aplikasi mobile sedang
                                 dalam tahap pengembangan.
                             </div>

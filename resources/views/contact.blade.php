@@ -229,14 +229,14 @@
                     <i class="bi bi-geo-alt flex-shrink-0"></i>
                     <div>
                         <h4>Lokasi:</h4>
-                        <p>TPI Muncar, Banyuwangi, Jawa Timur, Indonesia</p>
+                        <p>Dinas Perikanan Banyuwangi, Jawa Timur, Indonesia</p>
                     </div>
                 </div>
                 <div class="info-item d-flex align-items-center" data-aos="fade-up" data-aos-delay="100">
                     <i class="bi bi-envelope flex-shrink-0"></i>
                     <div>
                         <h4>Email:</h4>
-                        <p>info@pelangi-bwi.id</p>
+                        <p>info@peluang-bwi.id</p>
                     </div>
                 </div>
                 <div class="info-item d-flex align-items-center" data-aos="fade-up" data-aos-delay="200">

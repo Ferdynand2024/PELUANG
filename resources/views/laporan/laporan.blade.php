@@ -1,6 +1,6 @@
 @extends('layouts.navigasi')
 
-@section('title', 'Bukti Pembayaran — Pelangi')
+@section('title', 'Bukti Pembayaran — PELUANG')
 @section('page-title', 'Bukti Pembayaran')
 @section('page-subtitle', 'Pembayaran Telah Terselesaikan')
 @section('content')

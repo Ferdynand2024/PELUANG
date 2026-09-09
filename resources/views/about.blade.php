@@ -1,7 +1,7 @@
 @extends('layouts.landing')
 
 @section('title', 'About - Pelelangan Ikan Terpadu Cemerlang')
-@section('description', 'Tentang Pusat Pelelangan Ikan Terpadu Cemerlang (PELUANG) - Kerjasama dengan TPI Muncar dan Dinas Perikanan')
+@section('description', 'Tentang Pusat Pelelangan Ikan Terpadu Cemerlang (PELUANG) - Kerjasama dengan Dinas Perikanan')
 @push('styles')
 <style>
     :root {
@@ -479,7 +479,7 @@
                     <span class="section-subtitle">Kerjasama</span>
                     <h2 class="content-title">Kolaborasi untuk Memperkuat Ekonomi Maritim</h2>
                     <p class="lead">
-                        PELUANG adalah hasil kerjasama antara TPI Muncar dan Dinas Perikanan Kabupaten Banyuwangi.
+                        PELUANG adalah hasil kerjasama antara Mahasiswa Politeknik Negeri Banyuwangi dan Dinas Perikanan Kabupaten Banyuwangi.
                     </p>
                     <p class="mb-4">
                         Dengan menggabungkan pengalaman TPI dalam pengelolaan lelang tradisional dan pengawasan Dinas Perikanan, kami menghadirkan solusi digital yang memenuhi kebutuhan pasar modern sekaligus menjaga nilai-nilai tradisional.

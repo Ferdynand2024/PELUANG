@@ -292,7 +292,7 @@
     <div class="info-card">
         <div class="info-icon blue">ℹ️</div>
         <div class="info-card-text">
-            <h4>Sistem Pelelangan Ikan Pelangi</h4>
+            <h4>Sistem Pelelangan Ikan Peluang</h4>
             <p>Sebagai pembeli, Anda dapat mengikuti lelang ikan segar langsung dari nelayan terpercaya,
                melihat jadwal lelang, dan melakukan penawaran. Periksa jadwal secara berkala dan siapkan
                saldo yang cukup untuk mendapatkan ikan berkualitas terbaik dengan harga kompetitif.</p>
@@ -449,7 +449,7 @@
         <div class="welcome-text">
             <h2>Selamat datang, Admin {{ auth()->user()->name }}! 🛡️</h2>
             <p>Kelola seluruh pengguna, data sistem, dan konfigurasi platform
-               Pelelangan Ikan Pelangi dari panel administrasi terpusat.</p>
+               Pelelangan Ikan Peluang dari panel administrasi terpusat.</p>
         </div>
         <div class="welcome-actions">
             <a href="{{ route('dinas.index') }}" class="btn-hero-primary">
