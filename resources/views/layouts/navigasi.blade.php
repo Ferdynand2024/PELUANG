@@ -686,7 +686,7 @@
 
         {{-- Brand col --}}
         <div>
-            <div class="footer-brand-name">Pelangi<span>.</span></div>
+            <div class="footer-brand-name">Peluang<span>.</span></div>
             <p class="footer-tagline">
                 Platform pelelangan ikan digital yang menghubungkan nelayan dan pembeli secara cepat, transparan, dan terpercaya — demi mendukung ekonomi perikanan Banyuwangi.
             </p>
@@ -752,7 +752,7 @@
             <p class="footer-col-title" style="margin-top:1.5rem">Kontak</p>
             <ul class="footer-links">
                 <li>📍 Pelabuhan Perikanan, Banyuwangi</li>
-                <li>✉️ info@pelangi-banyuwangi.id</li>
+                <li>✉️ info@peluang-banyuwangi.id</li>
                 <li>📞 +62 812-3456-7890</li>
             </ul>
         </div>
@@ -761,7 +761,7 @@
 
     <div class="footer-bottom">
         <div class="footer-bottom-inner">
-            <p>© {{ date('Y') }} <strong>Pelangi</strong>. Pusat Pelelangan Ikan Terpadu Cemerlang. Semua hak dilindungi.</p>
+            <p>© {{ date('Y') }} <strong>Peluang</strong>. Pusat Pelelangan Ikan Terpadu Cemerlang. Semua hak dilindungi.</p>
             <div class="footer-bottom-links">
                 <a href="#">Syarat & Ketentuan</a>
                 <a href="#">Kebijakan Privasi</a>
